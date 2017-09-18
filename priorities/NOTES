@@ -1,0 +1,62 @@
+This gem helps people looking to buy a home and settle down find cities in Washington state that suit them based on their priorities.
+
+How it works:
+
+1. The user is given a list of "priorities" to put in a "priority bucket" one-at-a-time (in order of importance to them)
+
+Example Priorities:
+-Population Size
+-Climate
+-Diversity
+-Home affordability
+-Housing market health
+-Safety
+-Good Schools
+-% Home ownership
+
+2. The app starts with a full list of cities, and weeds them down as the user adds priorities to their bucket.  The user is allowed 4(?) priorities.
+
+SITES TO SCRAPE
+
+http://www.usa.com/rank/washington-state--crime-index--city-rank.htm
+https://en.wikipedia.org/wiki/List_of_cities_in_Washington
+https://www.greatschools.org/schools/cities/Washington/WA/
+https://www.greatschools.org/washington/aberdeen/
+https://www.niche.com/places-to-live/woodway-snohomish-wa/
+http://www.city-data.com/city/Dayton-Washington.html
+https://datausa.io/profile/geo/dayton-wa/
+
+
+-------------------
+WEBSCRAPE selectors
+
+https://datausa.io/profile/geo/dayton-wa/
+
+population:    doc.css("div#stat-container div.stat div.stat-group div.stat-value span.stat-span”).first.text
+
+median-income: doc.css("div#stat-container div.stat div.stat-group div.stat-value span.stat-span”)[2].text
+
+property-value:  median-income: doc.css("div#stat-container div.stat div.stat-group div.stat-value span.stat-span”)[4].text
+
+poverty rate:  doc.css("div#stat-container div.stat div.stat-group div.stat-value span.cart-percentage").text
+
+
+
+current property value:
+doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span”)[2].text
+
+old property value:
+
+doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span”)[4].text
+
+
+property tax:
+doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span”)[6].text
+
+
+% home ownership:
+doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span”)[7].text
+
+
+diversity (white population)
+doc.css("section.demographics.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value.stat-small span.stat-right span.stat-subtitle span.stat-span").first.text
