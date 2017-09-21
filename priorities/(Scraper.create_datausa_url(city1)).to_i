@@ -1,0 +1,25 @@
+
+[1mFrom:[0m /home/meebenitez-63702/code/labs/cli-data-gem-assessment-v-000/priorities/lib/city.rb @ line 97 City.check_affordability:
+
+     [1;34m88[0m: [32mdef[0m [1;36mself[0m.[1;34mcheck_affordability[0m
+     [1;34m89[0m:   [1;34m#anything below $200,000 (based on US home price avg of $188,900) is affordable[0m
+     [1;34m90[0m:   all_cities.each [32mdo[0m |city1|
+     [1;34m91[0m:     [36m@@all[0m.each [32mdo[0m |city2|
+     [1;34m92[0m:       [1;34m#binding.pry[0m
+     [1;34m93[0m:       [32mif[0m city1 == city2.name && [1;34;4mScraper[0m.grab_home_prices([1;34;4mScraper[0m.create_datausa_url(city1)).to_i < [1;34m200000[0m
+     [1;34m94[0m:       [1;34m#if city1 == city2.name && Scraper.grab_home_prices(Scraper.create_datausa_url(city1)).tr(',', '').to_i < 200000[0m
+     [1;34m95[0m:         testing = [31m[1;31m"[0m[31m#{city1}[0m[31m, #{Scraper.grab_home_prices(Scraper.create_datausa_url(city1))}[0m[31m[1;31m"[0m[31m[0m
+     [1;34m96[0m:         puts testing
+ =>  [1;34m97[0m:         binding.pry
+     [1;34m98[0m:         [1;34m#city2.avg_home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city2.name))[0m
+     [1;34m99[0m:       [1;34m#else[0m
+    [1;34m100[0m:       [1;34m#  all_cities.delete(city1)[0m
+    [1;34m101[0m:       [32mend[0m
+    [1;34m102[0m:     [32mend[0m
+    [1;34m103[0m:   [32mend[0m
+    [1;34m104[0m:   [1;34m#puts all_cities[0m
+    [1;34m105[0m:   [1;34m#  all_cities[city[0]][:ave_home_price] = Scraper.grab_home_prices(Scraper.create_datausa_url(city[0]))[0m
+    [1;34m106[0m:     [1;34m#puts "#{city[0]} -- #{Scraper.grab_home_prices(Scraper.create_datausa_url(city[0]))}"[0m
+    [1;34m107[0m:   [1;34m#end[0m
+    [1;34m108[0m: [32mend[0m
+

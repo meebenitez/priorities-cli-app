@@ -60,3 +60,12 @@ doc.css("section.housing.profile-section article.topic div.content aside div.top
 
 diversity (white population)
 doc.css("section.demographics.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value.stat-small span.stat-right span.stat-subtitle span.stat-span").first.text
+
+
+-------------
+LOGIC
+1. Get all town names
+2. Create an array of town names
+3. when use  has input, grab stats using town names
+4. if stat fits user input, add it to a new array
+5. generate the new current "array of town names"
