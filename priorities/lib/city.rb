@@ -58,7 +58,9 @@ class City
         #binding.pry
         ################################NOT WORKING###################################
       end
+      #binding.pry
     end
+    #binding.pry
     #puts all_cities
   end
 
@@ -115,11 +117,37 @@ class City
       end
     end
 
-    def create_display_hash(city)
-      #display_hash = {}
-      #@@all.each do |city|
-      #  if city.power_switch == "yes"
-      #    display_hash = []
+    def self.create_display_hash
+
+      display_hash = Hash.new do |hash, key|
+        hash[key] = {}
+      end
+      @@all.each do |city|
+        #binding.pry
+        if city.power_switch == "on"
+          #binding.pry
+          main_key = city.name
+          city.instance_variables.each do |var|
+            unless var.to_s.delete("@") == "state_short" || var.to_s.delete("@") == "state_long" || var.to_s.delete("@") == "name"
+              sub_key = var.to_s.delete("@")
+              display_hash[main_key][sub_key] = city.instance_variable_get(var)
+            end
+          end
+        end
+      end
+      display_hash
+#---------------------------------------
+
+
+
+
+          #    City.all.each do |city|
+          #      city.instance_variables.each do |var|
+          #        if var.to_s.delete("@") == "name"
+          #          puts city.instance_variable_get(var)
+          #        end
+          #      end
+          #    end
 
 
     end

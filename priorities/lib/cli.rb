@@ -29,13 +29,7 @@ attr_accessor :last_priority, :priorities
     City.check_population
     #City.check_affordability
     #City.check_diversity
-    City.all.each do |city|
-      city.instance_variables.each do |var|
-        if var.to_s.delete("@") == "name"
-          puts city.instance_variable_get(var)
-        end
-      end
-    end
+    puts City.create_display_hash
 
     #pick_priority
 
