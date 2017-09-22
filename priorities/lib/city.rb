@@ -123,7 +123,7 @@ class City
       end
       @@all.each do |city|
         if city.power_switch == "on"
-          main_key = city.name
+          main_key = "#{city.name}, #{city.state_short}"
           city.instance_variables.each do |var|
             unless var.to_s.delete("@") == "state_short" || var.to_s.delete("@") == "state_long" || var.to_s.delete("@") == "name" || var.to_s.delete("@") == "power_switch"
               sub_key = var.to_s.delete("@")

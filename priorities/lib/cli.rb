@@ -12,7 +12,7 @@ attr_accessor :last_priority, :priorities
 
     puts <<-DOC.gsub /^\s*/, ''
     Welcome to the Priorities Gem
-    I can help you find the ideal place for you to live in based on what's important to you.
+    I can help you find the ideal place for you to live based on what's important to you.
 
     First let's determine what size of a city you want to live in.
     DOC
@@ -29,7 +29,9 @@ attr_accessor :last_priority, :priorities
     City.check_population
     #City.check_affordability
     #City.check_diversity
-    display_results(City.create_display_hash)
+
+
+    #display_results(City.create_display_hash)
 
     #pick_priority
 
@@ -81,10 +83,9 @@ attr_accessor :last_priority, :priorities
     cities_hash.each do |city, attribute|
       puts "#{city}"
       attribute.each do |key, value|
-        puts "#{key}: #{value}"
+          puts "#{key}: #{value}"
       end
     end
-
   end
 
 
@@ -94,7 +95,35 @@ attr_accessor :last_priority, :priorities
     #ratings of 7 and above are considered good
   end
 
+  def count_results
+    City.all.count
+  end
 
+  def results_check
+    if count_results > 30
+      puts "You've whittled your list down to #{count_results} cities.  We should probably keep going."
+      puts "Pick the next important priority for you..."
+      pick_priority
+    elsif count_results < 15 && count_results > 5
+      puts "You've worked this list down to #{count_results} cities.  Here they are:"
+      display_results_short(City.create_display_hash)
+      puts "Would you like to keep choosing priorities to get this list even smaller?"
+      puts "(enter 'yes' or 'no')"
+      input = gets.strip
+      if input.downcase = "yes"
+        pick_priority
+      elsif input.downcase = "no"
+        display_results_short(City.create_display_hash)
+        #need to make a display_results_long
+      else
+        puts "invalid response"
+      end
+    else
+      puts "Success!  Here is the list of cities you came up with.  Happy house hunting!"
+      display_results_short(City.create_display_hash)
+      #need to make a display_results_long
+      puts "Would you like to start over?"
+    end
 
 
 
