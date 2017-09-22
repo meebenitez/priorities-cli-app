@@ -29,7 +29,7 @@ attr_accessor :last_priority, :priorities
     City.check_population
     #City.check_affordability
     #City.check_diversity
-    puts City.create_display_hash
+    display_results(City.create_display_hash)
 
     #pick_priority
 
@@ -76,12 +76,15 @@ attr_accessor :last_priority, :priorities
       puts "You have #{City.all.count} results!  That's much more manageable.  Let's start picking priorities to weed this list down."
   end
 
-  def display_results(priorities_array)
-    counter = 1
-    all_cities.each do |city|
-      puts "#{counter}. #{city.name} - (Pop. #{})"
-      counter += 1
+  def display_results(cities_hash)
+    puts "Here are your results:"
+    cities_hash.each do |city, attribute|
+      puts "#{city}"
+      attribute.each do |key, value|
+        puts "#{key}: #{value}"
+      end
     end
+
   end
 
 

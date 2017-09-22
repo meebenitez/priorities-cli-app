@@ -21,6 +21,10 @@ class Scraper
     cities
   end
 
+  def self.grab_bio(index_url)
+  end
+
+
   def self.grab_home_prices(index_url)
     doc = Nokogiri::HTML(open(index_url))
     price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
@@ -33,6 +37,16 @@ class Scraper
     white_population = doc.css("section.demographics.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value.stat-small span.stat-right span.stat-subtitle span.stat-span").first.text
     white_population
   end
+
+
+  def self.grab_averages
+    #average home price
+    #average white people
+    #average crime index
+
+  end
+
+
 
   def self.grab_safety(index_url="http://www.usa.com/rank/washington-state--crime-index--city-rank.htm")
     doc = Nokogiri::HTML(open(index_url))

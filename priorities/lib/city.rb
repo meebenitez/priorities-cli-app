@@ -1,6 +1,6 @@
 class City
 
-  attr_accessor :name, :avg_home_price, :diversity_percent, :population, :crime_index, :school_score, :power_switch, :state_short, :state_long
+  attr_accessor :name, :avg_home_price, :diversity_percent, :population, :crime_index, :school_score, :power_switch, :state_short, :state_long, :bio
 
   @@all = []
 
@@ -118,17 +118,14 @@ class City
     end
 
     def self.create_display_hash
-
       display_hash = Hash.new do |hash, key|
         hash[key] = {}
       end
       @@all.each do |city|
-        #binding.pry
         if city.power_switch == "on"
-          #binding.pry
           main_key = city.name
           city.instance_variables.each do |var|
-            unless var.to_s.delete("@") == "state_short" || var.to_s.delete("@") == "state_long" || var.to_s.delete("@") == "name"
+            unless var.to_s.delete("@") == "state_short" || var.to_s.delete("@") == "state_long" || var.to_s.delete("@") == "name" || var.to_s.delete("@") == "power_switch"
               sub_key = var.to_s.delete("@")
               display_hash[main_key][sub_key] = city.instance_variable_get(var)
             end
@@ -136,20 +133,6 @@ class City
         end
       end
       display_hash
-#---------------------------------------
-
-
-
-
-          #    City.all.each do |city|
-          #      city.instance_variables.each do |var|
-          #        if var.to_s.delete("@") == "name"
-          #          puts city.instance_variable_get(var)
-          #        end
-          #      end
-          #    end
-
-
     end
 
 
