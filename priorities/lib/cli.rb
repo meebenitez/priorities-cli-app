@@ -32,19 +32,11 @@ attr_accessor :last_priority, :priorities
     #create_cities_hash(Scraper.grab_cities)
     City.check_population
     results_check
-    #City.check_diversity
-
-
-    #display_results(City.create_display_hash)
-
-    #pick_priority
-
-
 
   end
 
   def rewind
-
+    #for the future
   end
 
 
@@ -58,7 +50,6 @@ attr_accessor :last_priority, :priorities
     input = input - 1
     priority = @@priorities[input]
     run_priority_check(priority)
-    #binding.pry
     @@priorities.delete(priority)
     @@priority_pick_order << priority
     results_check
@@ -87,11 +78,6 @@ attr_accessor :last_priority, :priorities
     @@priorities.reset!
   end
 
-  def chosen_priorities
-  #counter for number system
-  #create list hash with num => priority (unless priority == save_last_priority)
-  #puts list hash
-  end
 
   def display_populations_results
       puts "You have #{City.all.count} results!  That's much more manageable.  Let's start picking priorities to weed this list down."
@@ -140,6 +126,11 @@ attr_accessor :last_priority, :priorities
       else
         puts "invalid entry"
       end
+    elsif City.on_count == 0
+      puts "Looks like none of the cities in your current list fit that priority."
+      puts "Let's choose a different one."
+      puts City.reset_last
+      pick_priority
     else
       puts "Success!  Here is the list of cities you came up with.  Happy house hunting!"
       display_results_short(City.create_display_hash)

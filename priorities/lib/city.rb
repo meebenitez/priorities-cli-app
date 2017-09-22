@@ -4,6 +4,8 @@ class City
 
   @@all = []
 
+  @@turned_off = []
+
   def self.all
     @@all
   end
@@ -17,6 +19,18 @@ class City
     end
     count
   end
+
+  def self.reset_last
+    @@turned_off.each do |city|
+      city.power_switch = "on"
+    end
+  end
+
+  def self.reset_turned_off
+    @@turned_off.clear
+  end
+
+
 
   def self.check_population
     input = gets.strip
@@ -85,6 +99,7 @@ class City
         #########################add second_life save##################################
       else
         city.power_switch = "off"
+        @@turned_off << city
         #puts "#{city.name}, #{city.avg_home_price}, #{city.power_switch}"
       end
     end
@@ -101,6 +116,7 @@ class City
         city.diversity_percent = diversity_percent
         else
           city.power_switch = "off"
+          @@turned_off << city
         end
       end
     end
