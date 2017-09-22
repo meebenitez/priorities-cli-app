@@ -135,7 +135,7 @@ class City
       display_hash
     end
 
-
+##############ADD NIL CONDITION (NO CITIES MEET THE CRITERIA)
 
 
 end

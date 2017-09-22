@@ -8,11 +8,15 @@ attr_accessor :last_priority, :priorities
 @@priorities = ["Climate", "School Quality", "Home Affordability", "Employment Rate", "Safety", "Diversity", "Political Mindset"]
 @@priority_pick_order = []
 
+@@counter = 0
+
   def call
 
     puts <<-DOC.gsub /^\s*/, ''
     Welcome to the Priorities Gem
     I can help you find the ideal place for you to live based on what's important to you.
+
+    With the priorities you give me, I'll narrow down a list of 8 or less cities that you might just find perfect.
 
     First let's determine what size of a city you want to live in.
     DOC
@@ -27,7 +31,7 @@ attr_accessor :last_priority, :priorities
 
     #create_cities_hash(Scraper.grab_cities)
     City.check_population
-    #City.check_affordability
+    results_check
     #City.check_diversity
 
 
@@ -61,7 +65,7 @@ attr_accessor :last_priority, :priorities
     @@priority_pick_order << priority
     puts "---------#{@@priority_pick_order}"
 
-    pick_priority
+    results_check
   end
 
   def priorities_reset
@@ -78,7 +82,7 @@ attr_accessor :last_priority, :priorities
       puts "You have #{City.all.count} results!  That's much more manageable.  Let's start picking priorities to weed this list down."
   end
 
-  def display_results(cities_hash)
+  def display_results_short(cities_hash)
     puts "Here are your results:"
     cities_hash.each do |city, attribute|
       puts "#{city}"
@@ -100,23 +104,29 @@ attr_accessor :last_priority, :priorities
   end
 
   def results_check
-    if count_results > 30
-      puts "You've whittled your list down to #{count_results} cities.  We should probably keep going."
-      puts "Pick the next important priority for you..."
-      pick_priority
-    elsif count_results < 15 && count_results > 5
-      puts "You've worked this list down to #{count_results} cities.  Here they are:"
-      display_results_short(City.create_display_hash)
-      puts "Would you like to keep choosing priorities to get this list even smaller?"
-      puts "(enter 'yes' or 'no')"
-      input = gets.strip
-      if input.downcase = "yes"
+    puts count_results
+    if count_results > 15
+      puts "You've whittled your list down to #{count_results} cities.  But let's try to get you down to 10 or less."
+      if @@counter < 1
+        puts "Let's pick your first priority"
+        @@counter += 1
         pick_priority
-      elsif input.downcase = "no"
-        display_results_short(City.create_display_hash)
-        #need to make a display_results_long
       else
-        puts "invalid response"
+        puts "Pick the next important priority for you..."
+        pick_priority
+      end
+    elsif count_results < 15 && count_results > 8
+      puts "You're down to #{count_results} cities."
+      puts "We're almost there!  I can stop here here and give you more info on these cities.  Or we can keep going."
+      puts "(type 1 for STOP HERE)"
+      puts "(type 2 for KEEP GOING)"
+      input = gets.strip
+      if input == "1"
+        display_results_short(City.create_display_hash)
+      elsif input == "2"
+        pick_priority
+      else
+        puts "invalid entry"
       end
     else
       puts "Success!  Here is the list of cities you came up with.  Happy house hunting!"
@@ -124,6 +134,7 @@ attr_accessor :last_priority, :priorities
       #need to make a display_results_long
       puts "Would you like to start over?"
     end
+  end
 
 
 
