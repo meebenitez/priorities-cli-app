@@ -48,24 +48,39 @@ attr_accessor :last_priority, :priorities
   end
 
 
+
   def pick_priority
     #puts "Please choose a priority (type 1 - #{@priorities.count})"
     @@priorities.each_with_index do |priority, index|
       puts "#{index + 1}. #{priority}"
     end
-
     input = gets.strip.to_i
-
     input = input - 1
-
     priority = @@priorities[input]
-
+    run_priority_check(priority)
+    #binding.pry
     @@priorities.delete(priority)
-
     @@priority_pick_order << priority
-    puts "---------#{@@priority_pick_order}"
-
     results_check
+  end
+
+  def run_priority_check(priority)
+    #["Climate", "School Quality", "Home Affordability", "Employment Rate", "Safety", "Diversity", "Political Mindset"]
+    if priority == "Home Affordability"
+      City.check_affordability
+    elsif priority == "Employment Rate"
+      puts nil
+    elsif priority == "School Quality"
+      City.check_schools
+    elsif priority == "Safety"
+      City.check_safety
+    elsif priority == "Diversity"
+      City.check_diversity
+    elsif priority == "Political Mindset"
+      puts nil
+    else
+      puts nil
+    end
   end
 
   def priorities_reset
@@ -99,14 +114,11 @@ attr_accessor :last_priority, :priorities
     #ratings of 7 and above are considered good
   end
 
-  def count_results
-    City.all.count
-  end
 
   def results_check
-    puts count_results
-    if count_results > 15
-      puts "You've whittled your list down to #{count_results} cities.  But let's try to get you down to 10 or less."
+    puts City.on_count
+    if City.on_count > 15
+      puts "You've whittled your list down to #{City.on_count} cities.  But let's try to get you down to 10 or less."
       if @@counter < 1
         puts "Let's pick your first priority"
         @@counter += 1
@@ -115,8 +127,8 @@ attr_accessor :last_priority, :priorities
         puts "Pick the next important priority for you..."
         pick_priority
       end
-    elsif count_results < 15 && count_results > 8
-      puts "You're down to #{count_results} cities."
+    elsif City.on_count < 15 && City.on_count > 8
+      puts "You're down to #{City.on_count} cities."
       puts "We're almost there!  I can stop here here and give you more info on these cities.  Or we can keep going."
       puts "(type 1 for STOP HERE)"
       puts "(type 2 for KEEP GOING)"

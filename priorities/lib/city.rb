@@ -8,6 +8,16 @@ class City
     @@all
   end
 
+  def self.on_count
+    count = 0
+    @@all.each do |city|
+      if city.power_switch == "on"
+        count += 1
+      end
+    end
+    count
+  end
+
   def self.check_population
     input = gets.strip
     cities_hash = {}
