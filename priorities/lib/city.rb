@@ -105,7 +105,6 @@ class City
     @@all.each do |city|
       home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name))
       home_price.gsub(/[$,]/, '').to_i < 188900 ? city.avg_home_price = home_price : turn_city_off(city)
-      end
     end
   end
 
@@ -116,12 +115,7 @@ class City
       white_population = Scraper.grab_diversity(Scraper.create_datausa_url(city.name)).tr(',', '').to_i
       unless city.power_switch == "off"
         diversity_percent = diversity_percentage(total_population, white_population)
-        if diversity_percent > 37
-        city.diversity_percent = diversity_percent
-        else
-          city.power_switch = "off"
-          @@turned_off << city
-        end
+        diversity_percent > 37 ? city.diversity_percent = diversity_percent : turn_city_off(city)
       end
     end
   end
