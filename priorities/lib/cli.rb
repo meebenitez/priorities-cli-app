@@ -104,6 +104,7 @@ attr_accessor :last_priority, :priorities
   def results_check
     puts City.on_count
     if City.on_count > 15
+      City.destroy_turned_off
       puts "You've whittled your list down to #{City.on_count} cities.  But let's try to get you down to 10 or less."
       if @@counter < 1
         puts "Let's pick your first priority"
@@ -114,6 +115,7 @@ attr_accessor :last_priority, :priorities
         pick_priority
       end
     elsif City.on_count < 15 && City.on_count > 8
+      City.destroy_turned_off
       puts "You're down to #{City.on_count} cities."
       puts "We're almost there!  I can stop here here and give you more info on these cities.  Or we can keep going."
       puts "(type 1 for STOP HERE)"
@@ -135,6 +137,7 @@ attr_accessor :last_priority, :priorities
       puts "Success!  Here is the list of cities you came up with.  Happy house hunting!"
       display_results_short(City.create_display_hash)
       #need to make a display_results_long
+      City.destroy_turned_off
       puts "Would you like to start over?"
     end
   end

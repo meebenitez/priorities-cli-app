@@ -26,7 +26,7 @@ class City
     end
   end
 
-  def self.reset_turned_off
+  def self.destroy_turned_off
     @@turned_off.clear
   end
 
