@@ -30,6 +30,13 @@ class City
     @@turned_off.clear
   end
 
+  def create_city(city, cities_hash)
+    city_obj = self.new
+    city_obj.name = city[0]
+    city_obj.population = cities_hash[city[0]][:population]
+    city_obj.power_switch = "on"
+    @@all << city_obj
+  end
 
 
   def self.check_population
@@ -42,7 +49,6 @@ class City
       if input == "1"
         if cities_hash[city[0]][:population].tr(',', '').to_i > 150000
           city_obj = self.new
-          #puts city[0]
           city_obj.name = city[0]
           city_obj.population = cities_hash[city[0]][:population]
           city_obj.power_switch = "on"
@@ -89,18 +95,16 @@ class City
   end
 
 
+  def self.turn_city_off(city)
+    city.power_switch = "off"
+    @@turned_off << city
+  end
+
   def self.check_affordability
     #based on US home price avg, anything below $188,900 is considered affordable
     @@all.each do |city|
       home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name))
-      if home_price.gsub(/[$,]/, '').to_i < 188900
-        city.avg_home_price = home_price
-        #puts "#{city.name}, #{city.avg_home_price}"
-        #########################add second_life save##################################
-      else
-        city.power_switch = "off"
-        @@turned_off << city
-        #puts "#{city.name}, #{city.avg_home_price}, #{city.power_switch}"
+      home_price.gsub(/[$,]/, '').to_i < 188900 ? city.avg_home_price = home_price : turn_city_off(city)
       end
     end
   end
