@@ -13,17 +13,13 @@ class City
   def self.on_count
     count = 0
     @@all.each do |city|
-      if city.power_switch == "on"
-        count += 1
-      end
+      city.power_switch == "on" if count += 1
     end
     count
   end
 
   def self.reset_last
-    @@turned_off.each do |city|
-      city.power_switch = "on"
-    end
+    @@turned_off.each { |city| city.power_switch = "on" }
   end
 
   def self.destroy_turned_off
@@ -105,6 +101,7 @@ class City
     @@all.each do |city|
       home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name))
       home_price.gsub(/[$,]/, '').to_i < 188900 ? city.avg_home_price = home_price : turn_city_off(city)
+      binding.pry
     end
   end
 
@@ -133,9 +130,7 @@ class City
           if city[0] == city1 && safety_index.tr(',', '').to_i > 2000
             all_cities.delete(city[0])
           else
-            if city[0] == city1
-              all_cities[city[0]][:crime_index] = safety_index
-            end
+              all_cities[city[0]][:crime_index] = safety_index if city[0] == city1
           end
         end
       end

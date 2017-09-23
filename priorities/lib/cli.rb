@@ -43,9 +43,7 @@ attr_accessor :last_priority, :priorities
 
   def pick_priority
     #puts "Please choose a priority (type 1 - #{@priorities.count})"
-    @@priorities.each_with_index do |priority, index|
-      puts "#{index + 1}. #{priority}"
-    end
+    @@priorities.each_with_index { |priority, index| puts "#{index + 1}. #{priority}" }
     input = gets.strip.to_i
     input = input - 1
     priority = @@priorities[input]

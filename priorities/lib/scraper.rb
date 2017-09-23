@@ -68,9 +68,7 @@ class Scraper
   end
 
   def self.check_and_convert_name(name)
-    if name.include?(" ")
-      name = name.gsub(' ', '-')
-    end
+    name = name.gsub(' ', '-') if name.include?(" ")
     name
   end
 
