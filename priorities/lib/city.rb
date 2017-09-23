@@ -53,12 +53,36 @@ class City
                   "Wyoming" => "WY"
                 }
 
+
+
   @@all = []
 
   @@turned_off = []
 
   def self.all
     @@all
+  end
+
+  def self.regions(input)
+    region_array = []
+    if input == "Northern Rockies"
+      region_array = ["Montana", "Idaho", "Wyoming", "North Dakota", "South Dakota", "Nebraska"]
+    elsif input == "Southern Rockies"
+      region_array = ["Utah", "Colorado", "New Mexico", "Arizona"]
+    elsif input == "South Central"
+      region_array = ["Texas", "Oklahoma", "Kansas", "Missouri", "Arkansas", "Louisiana"]
+    elsif input == "Southeast"
+      region_array = ["Mississippi", "Alabama", "Georgia", "Florida", "South Carolina", "North Carolina", "Tennessee", "Kentucky", "Virginia", "West Virginia"]
+    elsif input == "North Central"
+      region_array = ["Minnesota", "Iowa", "Wisconsin", "Illinois", "Indiana", "Michigan", "Ohio"]
+    elsif input == "Northeast"
+      region_array = ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "New York", "Connecticut", "Pennsylvania", "New Jersey", "Delaware", "Maryland"]
+    elsif input == "West"
+      region_array = ["Washington", "California", "Oregon", "Nevada"]
+    else
+      #
+    end
+    region_array
   end
 
   def self.on_count

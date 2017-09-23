@@ -8,34 +8,9 @@ class Scraper
 
 
   def self.generate_state_urls(input = "West")
-    ####POLISH ---- THIS METHOD NEEDS REDUCTION
-    #Creates a hash of urls to push into to 'grab_cities' based on user input
-    #Hard-coded regions###########################################################################
-    northern_rockies = ["Montana", "Idaho", "Wyoming", "North Dakota", "South Dakota", "Nebraska"]
-    southern_rockies = ["Utah", "Colorado", "New Mexico", "Arizona"]
-    south_central = ["Texas", "Oklahoma", "Kansas", "Missouri", "Arkansas", "Louisiana"]
-    southeast = ["Mississippi", "Alabama", "Georgia", "Florida", "South Carolina", "North Carolina", "Tennessee", "Kentucky", "Virginia", "West Virginia"]
-    north_central = ["Minnesota", "Iowa", "Wisconsin", "Illinois", "Indiana", "Michigan", "Ohio"]
-    northeast = ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "New York", "Connecticut", "Pennsylvania", "New Jersey", "Delaware", "Maryland"]
-    west = ["Washington", "California", "Oregon", "Nevada"]
-    ##############################################################################################
+
     url_hash = {}
-    #####POLISH consider making regions a nested array and then iterating through to avoid all of this if/else nonsense
-    if input == "Northern Rockies"
-      northern_rockies.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
-    elsif input == "Southern Rockies"
-      southern_rockies.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
-    elsif input == "South Central"
-      south_central.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
-    elsif input == "Southeast"
-      southeast.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
-    elsif input == "North Central"
-      north_central.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
-    elsif input == "Northeast"
-      northeast.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
-    elsif input == "West"
-      west.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
-    end
+    City.regions(input).each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
     url_hash
   end
 
