@@ -7,13 +7,6 @@ attr_accessor :last_priority, :priorities
 
 @@priorities = ["Climate", "School Quality", "Home Affordability", "Employment Rate", "Safety", "Diversity", "Political Mindset"]
 @@priority_pick_order = []
-@@regions = ["West", "North Rockies", "Southern Rockies", "South Central", "North Central", "Northeast", "Southeast"]
-
-
-  def pick_region
-
-
-  end
 
 @@counter = 0
 
@@ -25,11 +18,7 @@ attr_accessor :last_priority, :priorities
 
     With the priorities you give me, I'll narrow down a list of 8 or less cities that you might just find perfect.
 
-    First, let's choose a region to start your search:
-
-
-
-    First let's determine what size of a city you want to live in.
+    Next, let's choose what size city you want to live in
     DOC
     puts <<-DOC.gsub /^\s*/, ''
     1. Big City ( 150K+ )

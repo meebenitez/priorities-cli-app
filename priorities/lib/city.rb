@@ -53,8 +53,7 @@ class City
                   "Wyoming" => "WY"
                 }
 
-
-
+  @@regions = ["West", "North Rockies", "Southern Rockies", "South Central", "North Central", "Northeast", "Southeast"]
   @@all = []
 
   @@turned_off = []
@@ -117,10 +116,19 @@ class City
   end
 
 
+  def self.pick_region
+    puts "... and which region of the US do you want to start your search in?"
+    @@regions.each_with_index { |region, index| puts "#{index + 1}. #{region}" }
+    input = gets.strip.to_i
+    input = input - 1
+    input = @@regions[input]
+    Scraper.generate_state_urls(input)
+  end
+
   def self.check_population
     input = gets.strip
     cities_hash = {}
-    cities_hash = Scraper.grab_cities(Scraper.generate_state_urls)
+    cities_hash = Scraper.grab_cities(pick_region)
     #generate a hash of city data from Scraper
     cities_hash.each do |city|
       #iterate through the grab_cities hash to generate initial data based on the user's Region pick and population choice

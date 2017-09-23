@@ -7,8 +7,7 @@ class Scraper
 
 
 
-  def self.generate_state_urls(input = "West")
-
+  def self.generate_state_urls(input)
     url_hash = {}
     City.regions(input).each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
     url_hash
