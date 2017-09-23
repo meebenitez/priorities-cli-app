@@ -93,14 +93,13 @@ class City
   end
 
 
-
-
   def self.check_population
     input = gets.strip
     cities_hash = {}
-    cities_hash = Scraper.grab_cities
-    ##############LOOK INTO SEND METHOD#########################
+    cities_hash = Scraper.grab_cities(Scraper.generate_state_urls)
+    #generate a hash of city data from Scraper
     cities_hash.each do |city|
+      #iterate through the grab_cities hash to generate initial data based on the user's Region pick and population choice
       population_count = cities_hash[city[0]][:population].tr(',', '').to_i
       if input == "1"
         create_city(city, cities_hash) if population_count > 150000
@@ -121,9 +120,10 @@ class City
     end
   end
 
-
   def self.turn_city_off(city)
+    #Switch a city's power_switch to "off" if they don't meet the criteria of the user's priority pick
     city.power_switch = "off"
+    #Log that this city was turned off, just in case we need to reverse the action
     @@turned_off << city
   end
 

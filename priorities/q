@@ -1,0 +1,25 @@
+
+[1mFrom:[0m /home/meebenitez-63702/code/labs/priorities-cli-app/priorities/lib/scraper.rb @ line 45 Scraper.grab_cities:
+
+    [1;34m27[0m:   [32mdef[0m [1;36mself[0m.[1;34mgrab_cities[0m
+    [1;34m28[0m: [1;34m#    def self.grab_cities(url_hash)[0m
+    [1;34m29[0m:   url_hash = {[31m[1;31m"[0m[31mAlabama[1;31m"[0m[31m[0m => [31m[1;31m"[0m[31mhttp://worldpopulationreview.com/states/alabama-population/cities/[1;31m"[0m[31m[0m,
+    [1;34m30[0m:               [31m[1;31m"[0m[31mWashington[1;31m"[0m[31m[0m => [31m[1;31m"[0m[31mhttp://worldpopulationreview.com/states/washington-population/cities/[1;31m"[0m[31m[0m
+    [1;34m31[0m:               }
+    [1;34m32[0m:     [1;34m#return hash of cities[0m
+    [1;34m33[0m:     cities = {}
+    [1;34m34[0m:     counter = [1;34m0[0m
+    [1;34m35[0m:     url_hash.each [32mdo[0m |state, state_url|
+    [1;34m36[0m:       doc = [1;34;4mNokogiri[0m::HTML(open(state_url))
+    [1;34m37[0m:       data = doc.css([31m[1;31m"[0m[31mdiv.section-content[1;31m"[0m[31m[0m).css([31m[1;31m"[0m[31mtbody[data-reactid='183'][1;31m"[0m[31m[0m).css([31m[1;31m"[0m[31mtd[1;31m"[0m[31m[0m)
+    [1;34m38[0m:       total_count = data.count - [1;34m1[0m
+    [1;34m39[0m:       [32muntil[0m counter > total_count
+    [1;34m40[0m:         counter.even? ? city_name = data[counter].text : city_population = data[counter].text
+    [1;34m41[0m:         cities.merge!({city_name => {[35mpopulation[0m: city_population, [35mstate_name[0m: state}})
+    [1;34m42[0m:         counter += [1;34m1[0m
+    [1;34m43[0m:       [32mend[0m
+    [1;34m44[0m:     [32mend[0m
+ => [1;34m45[0m:     binding.pry
+    [1;34m46[0m:       cities
+    [1;34m47[0m:   [32mend[0m
+

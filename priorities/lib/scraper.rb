@@ -7,32 +7,45 @@ class Scraper
 
 
 
-
-  def self.generate_state_urls
-    #use check_and_convert_name
-    #url_hash = {}
-  #  northern_rockies = ["Montana", "Idaho", "Wyoming", "North Dakota", "South Dakota", "Nebraska"]
-  #  southern_rockies = ["Utah", "Colorado", "New Mexico", "Arizona"]
-  #  alaska = ["Alaska"]
-  #  hawaii = ["Hawaii"]
-  #  south_central = ["Texas", "Oklahoma", "Kansas", "Missouri", "Arkansas", "Louisiana"]
-  #  southeast = ["Mississippi", "Alabama", "Georgia", "Florida", "South Carolina", "North Carolina", "Tennessee", "Kentucky", "Virginia", "West Virginia"]
-  #  north_central = ["Minnesota", "Iowa", "Wisconsin", "Illinois", "Indiana", "Michigan", "Ohio"]
-  #  northeast = ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "New York", "Connecticut", "Pennsylvania", "New Jersey", "Delaware", "Maryland"]
-
-    #output should {state_name => url}
+  def self.generate_state_urls(input = "West")
+    ####POLISH ---- THIS METHOD NEEDS REDUCTION
+    #Creates a hash of urls to push into to 'grab_cities' based on user input
+    #Hard-coded regions###########################################################################
+    northern_rockies = ["Montana", "Idaho", "Wyoming", "North Dakota", "South Dakota", "Nebraska"]
+    southern_rockies = ["Utah", "Colorado", "New Mexico", "Arizona"]
+    south_central = ["Texas", "Oklahoma", "Kansas", "Missouri", "Arkansas", "Louisiana"]
+    southeast = ["Mississippi", "Alabama", "Georgia", "Florida", "South Carolina", "North Carolina", "Tennessee", "Kentucky", "Virginia", "West Virginia"]
+    north_central = ["Minnesota", "Iowa", "Wisconsin", "Illinois", "Indiana", "Michigan", "Ohio"]
+    northeast = ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "New York", "Connecticut", "Pennsylvania", "New Jersey", "Delaware", "Maryland"]
+    west = ["Washington", "California", "Oregon", "Nevada"]
+    ##############################################################################################
+    url_hash = {}
+    #####POLISH consider making regions a nested array and then iterating through to avoid all of this if/else nonsense
+    if input == "Northern Rockies"
+      northern_rockies.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
+    elsif input == "Southern Rockies"
+      southern_rockies.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
+    elsif input == "South Central"
+      south_central.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
+    elsif input == "Southeast"
+      southeast.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
+    elsif input == "North Central"
+      north_central.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
+    elsif input == "Northeast"
+      northeast.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
+    elsif input == "West"
+      west.each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
+    end
+    url_hash
   end
-  #"http://worldpopulationreview.com/states/washington-population/cities/"
 
-  def self.grab_cities
+
+  def self.grab_cities(url_hash)
 #    def self.grab_cities(url_hash)
-  url_hash = {"Alaska" => "http://worldpopulationreview.com/states/alaska-population/cities/",
-              "Alabama" => "http://worldpopulationreview.com/states/alabama-population/cities/"
-              }
     #return hash of cities
     cities = {}
-    counter = 0
     url_hash.each do |state, state_url|
+      counter = 0
       doc = Nokogiri::HTML(open(state_url))
       data = doc.css("div.section-content").css("tbody[data-reactid='183']").css("td")
       total_count = data.count - 1
@@ -44,6 +57,8 @@ class Scraper
     end
       cities
   end
+
+
 
   def self.grab_bio(index_url)
   end
@@ -107,22 +122,22 @@ class Scraper
     name
   end
 
-  def self.create_greatschools_url(name)
-    name = check_and_convert_name_underscore(name)
-    data_url = "https://www.greatschools.org/washington/#{name.downcase}/"
+  def self.create_greatschools_url(city_name, state_long)
+    city_name = check_and_convert_name_underscore(city_name)
+    data_url = "https://www.greatschools.org/#{state_long.downcase}/#{city_name.downcase}/"
     data_url
   end
 
 
-  def self.create_datausa_url(name, state_short)
-    name = check_and_convert_name_dash(name)
+  def self.create_datausa_url(city_name, state_short)
+    city_name = check_and_convert_name_dash(city_name)
     data_url = "https://datausa.io/profile/geo/#{name.downcase}-#{state_short.downcase}/"
     data_url
   end
 
-  def self.create_worldpop_url(name)
-    name = check_and_convert_name_dash(name)
-    data_url = "http://worldpopulationreview.com/states/#{name.downcase}-population/cities/"
+  def self.create_worldpop_url(state_name)
+    state_name = check_and_convert_name_dash(state_name)
+    data_url = "http://worldpopulationreview.com/states/#{state_name.downcase}-population/cities/"
     data_url
   end
 
