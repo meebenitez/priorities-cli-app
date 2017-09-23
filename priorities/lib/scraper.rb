@@ -4,7 +4,97 @@ require 'pry'
 
 class Scraper
 
-  def self.grab_cities(index_url = "http://worldpopulationreview.com/states/washington-population/cities/")
+  STATE_HASH = {  "Alabama" => "AL",
+                  "Alaska" => "AK",
+                  "Arizona" => "AZ",
+                  "California" => "CA",
+                  "Colorado" => "CO",
+                  "Connecticut" => "CT",
+                  "Delaware" => "DE",
+                  "Florida" => "FL",
+                  "Georgia" => "GA",
+                  "Hawaii" => "HI",
+                  "Idaho" => "ID",
+                  "Illinois" => "IL",
+                  "Indiana" => "IN",
+                  "Iowa" => "IA",
+                  "Kansas" => "KS",
+                  "Kentucky" => "KY",
+                  "Louisiana" => "LA",
+                  "Maine" => "ME",
+                  "Maryland" => "MD",
+                  "Massachusetts" => "MA",
+                  "Michigan" => "MI",
+                  "Minnesota" => "MN",
+                  "Mississippi" => "MS",
+                  "Missouri" => "MO",
+                  "Montana" => "MT",
+                  "Nebraska" => "NE",
+                  "Nevada" => "NV",
+                  "New Hampshire" => "NH",
+                  "New Jersey" => "NJ",
+                  "New Mexico" => "NM",
+                  "New York" => "NY",
+                  "North Carolina" => "NC",
+                  "North Dakota" => "ND",
+                  "Ohio" => "OH",
+                  "Oklahoma" => "OK",
+                  "Oregon" => "OR",
+                  "Pennsylvania" => "PA",
+                  "Rhode Island" => "RI",
+                  "South Carolina" => "SC",
+                  "South Dakota" => "SD",
+                  "Tennessee" => "TN",
+                  "Texas" => "TX",
+                  "Utah" => "UT",
+                  "Vermont" => "VT",
+                  "Virginia" => "VA",
+                  "Washington" => "WA",
+                  "West Virginia" => "WV",
+                  "Wisconsin" => "WI",
+                  "Wyoming" => "WY"
+                }
+
+
+  def self.generate_state_short(state_name)
+    short_name = STATE_HASH(state_name)
+    short_name
+  end
+
+
+  def self.generate_world_pop_urls(input)
+    #use check_and_convert_name
+    url_array = []
+    northern_rockies = ["Montana", "Idaho", "Wyoming", "North Dakota", "South Dakota", "Nebraska"]
+    southern_rockies = ["Utah", "Colorado", "New Mexico", "Arizona"]
+    alaska = ["Alaska"]
+    hawaii = ["Hawaii"]
+    south_central = ["Texas", "Oklahoma", "Kansas", "Missouri", "Arkansas", "Louisiana"]
+    southeast = ["Mississippi", "Alabama", "Georgia", "Florida", "South Carolina", "North Carolina", "Tennessee", "Kentucky", "Virginia", "West Virginia"]
+    north_central = ["Minnesota", "Iowa", "Wisconsin", "Illinois", "Indiana", "Michigan", "Ohio"]
+    northeast = ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "New York", "Connecticut", "Pennsylvania", "New Jersey", "Delaware", "Maryland"]
+  end
+
+
+    if input == "Alaska"
+      url =
+
+
+      #Alaska
+      #Hawaii
+      #West
+      #Northern Rockies
+      #Southern Rockies
+      #South Central
+      #North Central
+      #Southeast
+      #northeast
+
+
+
+  #"http://worldpopulationreview.com/states/washington-population/cities/"
+
+  def self.grab_cities(index_url)
     #return hash of cities
     cities = {}
     counter = 0
@@ -12,11 +102,7 @@ class Scraper
     data = doc.css("div.section-content").css("tbody[data-reactid='183']").css("td")
     total_count = data.count - 1
     until counter > total_count
-      if counter.even?
-        city_name = data[counter].text
-      else
-        city_population = data[counter].text
-      end
+      counter.even? ? city_name = data[counter].text : city_population = data[counter].text
       cities.merge!({city_name => {population: city_population}})
       counter += 1
     end
@@ -97,8 +183,6 @@ class Scraper
     data_url = "https://datausa.io/profile/geo/#{name.downcase}-wa/"
     data_url
   end
-
-
 
 
 
