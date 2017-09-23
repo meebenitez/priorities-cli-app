@@ -2,6 +2,57 @@ class City
 
   attr_accessor :name, :avg_home_price, :diversity_percent, :population, :crime_index, :school_score, :power_switch, :state_short, :state_long, :bio
 
+  STATE_HASH = {  "Alabama" => "AL",
+                  "Alaska" => "AK",
+                  "Arizona" => "AZ",
+                  "California" => "CA",
+                  "Colorado" => "CO",
+                  "Connecticut" => "CT",
+                  "Delaware" => "DE",
+                  "Florida" => "FL",
+                  "Georgia" => "GA",
+                  "Hawaii" => "HI",
+                  "Idaho" => "ID",
+                  "Illinois" => "IL",
+                  "Indiana" => "IN",
+                  "Iowa" => "IA",
+                  "Kansas" => "KS",
+                  "Kentucky" => "KY",
+                  "Louisiana" => "LA",
+                  "Maine" => "ME",
+                  "Maryland" => "MD",
+                  "Massachusetts" => "MA",
+                  "Michigan" => "MI",
+                  "Minnesota" => "MN",
+                  "Mississippi" => "MS",
+                  "Missouri" => "MO",
+                  "Montana" => "MT",
+                  "Nebraska" => "NE",
+                  "Nevada" => "NV",
+                  "New Hampshire" => "NH",
+                  "New Jersey" => "NJ",
+                  "New Mexico" => "NM",
+                  "New York" => "NY",
+                  "North Carolina" => "NC",
+                  "North Dakota" => "ND",
+                  "Ohio" => "OH",
+                  "Oklahoma" => "OK",
+                  "Oregon" => "OR",
+                  "Pennsylvania" => "PA",
+                  "Rhode Island" => "RI",
+                  "South Carolina" => "SC",
+                  "South Dakota" => "SD",
+                  "Tennessee" => "TN",
+                  "Texas" => "TX",
+                  "Utah" => "UT",
+                  "Vermont" => "VT",
+                  "Virginia" => "VA",
+                  "Washington" => "WA",
+                  "West Virginia" => "WV",
+                  "Wisconsin" => "WI",
+                  "Wyoming" => "WY"
+                }
+
   @@all = []
 
   @@turned_off = []
@@ -26,13 +77,22 @@ class City
     @@turned_off.clear
   end
 
+  def self.generate_state_short(state_name)
+    short_name = STATE_HASH(state_name)
+    short_name
+  end
+
   def self.create_city(city, cities_hash)
     city_obj = self.new
     city_obj.name = city[0]
     city_obj.population = cities_hash[city[0]][:population]
+    city_obj.state_long = cities_hash[city[0]][:state_name]
+    city_obj.state_short = STATE_HASH[cities_hash[city[0]][:state_name]]
     city_obj.power_switch = "on"
     @@all << city_obj
   end
+
+
 
 
   def self.check_population
@@ -79,7 +139,7 @@ class City
     #us average of white people is 63%
     @@all.each do |city|
       total_population = city.population.tr(',', '').to_i### total population
-      white_population = Scraper.grab_diversity(Scraper.create_datausa_url(city.name)).tr(',', '').to_i
+      white_population = Scraper.grab_diversity(Scraper.create_datausa_url(city.name, city.state_short)).tr(',', '').to_i
       unless city.power_switch == "off"
         diversity_percent = diversity_percentage(total_population, white_population)
         diversity_percent > 37 ? city.diversity_percent = diversity_percent : turn_city_off(city)

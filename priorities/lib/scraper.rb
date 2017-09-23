@@ -4,109 +4,45 @@ require 'pry'
 
 class Scraper
 
-  STATE_HASH = {  "Alabama" => "AL",
-                  "Alaska" => "AK",
-                  "Arizona" => "AZ",
-                  "California" => "CA",
-                  "Colorado" => "CO",
-                  "Connecticut" => "CT",
-                  "Delaware" => "DE",
-                  "Florida" => "FL",
-                  "Georgia" => "GA",
-                  "Hawaii" => "HI",
-                  "Idaho" => "ID",
-                  "Illinois" => "IL",
-                  "Indiana" => "IN",
-                  "Iowa" => "IA",
-                  "Kansas" => "KS",
-                  "Kentucky" => "KY",
-                  "Louisiana" => "LA",
-                  "Maine" => "ME",
-                  "Maryland" => "MD",
-                  "Massachusetts" => "MA",
-                  "Michigan" => "MI",
-                  "Minnesota" => "MN",
-                  "Mississippi" => "MS",
-                  "Missouri" => "MO",
-                  "Montana" => "MT",
-                  "Nebraska" => "NE",
-                  "Nevada" => "NV",
-                  "New Hampshire" => "NH",
-                  "New Jersey" => "NJ",
-                  "New Mexico" => "NM",
-                  "New York" => "NY",
-                  "North Carolina" => "NC",
-                  "North Dakota" => "ND",
-                  "Ohio" => "OH",
-                  "Oklahoma" => "OK",
-                  "Oregon" => "OR",
-                  "Pennsylvania" => "PA",
-                  "Rhode Island" => "RI",
-                  "South Carolina" => "SC",
-                  "South Dakota" => "SD",
-                  "Tennessee" => "TN",
-                  "Texas" => "TX",
-                  "Utah" => "UT",
-                  "Vermont" => "VT",
-                  "Virginia" => "VA",
-                  "Washington" => "WA",
-                  "West Virginia" => "WV",
-                  "Wisconsin" => "WI",
-                  "Wyoming" => "WY"
-                }
 
 
-  def self.generate_state_short(state_name)
-    short_name = STATE_HASH(state_name)
-    short_name
-  end
 
 
-  def self.generate_world_pop_urls(input)
+  def self.generate_state_urls
     #use check_and_convert_name
-    url_array = []
-    northern_rockies = ["Montana", "Idaho", "Wyoming", "North Dakota", "South Dakota", "Nebraska"]
-    southern_rockies = ["Utah", "Colorado", "New Mexico", "Arizona"]
-    alaska = ["Alaska"]
-    hawaii = ["Hawaii"]
-    south_central = ["Texas", "Oklahoma", "Kansas", "Missouri", "Arkansas", "Louisiana"]
-    southeast = ["Mississippi", "Alabama", "Georgia", "Florida", "South Carolina", "North Carolina", "Tennessee", "Kentucky", "Virginia", "West Virginia"]
-    north_central = ["Minnesota", "Iowa", "Wisconsin", "Illinois", "Indiana", "Michigan", "Ohio"]
-    northeast = ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "New York", "Connecticut", "Pennsylvania", "New Jersey", "Delaware", "Maryland"]
+    #url_hash = {}
+  #  northern_rockies = ["Montana", "Idaho", "Wyoming", "North Dakota", "South Dakota", "Nebraska"]
+  #  southern_rockies = ["Utah", "Colorado", "New Mexico", "Arizona"]
+  #  alaska = ["Alaska"]
+  #  hawaii = ["Hawaii"]
+  #  south_central = ["Texas", "Oklahoma", "Kansas", "Missouri", "Arkansas", "Louisiana"]
+  #  southeast = ["Mississippi", "Alabama", "Georgia", "Florida", "South Carolina", "North Carolina", "Tennessee", "Kentucky", "Virginia", "West Virginia"]
+  #  north_central = ["Minnesota", "Iowa", "Wisconsin", "Illinois", "Indiana", "Michigan", "Ohio"]
+  #  northeast = ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "New York", "Connecticut", "Pennsylvania", "New Jersey", "Delaware", "Maryland"]
+
+    #output should {state_name => url}
   end
-
-
-    if input == "Alaska"
-      url =
-
-
-      #Alaska
-      #Hawaii
-      #West
-      #Northern Rockies
-      #Southern Rockies
-      #South Central
-      #North Central
-      #Southeast
-      #northeast
-
-
-
   #"http://worldpopulationreview.com/states/washington-population/cities/"
 
-  def self.grab_cities(index_url)
+  def self.grab_cities
+#    def self.grab_cities(url_hash)
+  url_hash = {"Alaska" => "http://worldpopulationreview.com/states/alaska-population/cities/",
+              "Alabama" => "http://worldpopulationreview.com/states/alabama-population/cities/"
+              }
     #return hash of cities
     cities = {}
     counter = 0
-    doc = Nokogiri::HTML(open(index_url))
-    data = doc.css("div.section-content").css("tbody[data-reactid='183']").css("td")
-    total_count = data.count - 1
-    until counter > total_count
-      counter.even? ? city_name = data[counter].text : city_population = data[counter].text
-      cities.merge!({city_name => {population: city_population}})
-      counter += 1
+    url_hash.each do |state, state_url|
+      doc = Nokogiri::HTML(open(state_url))
+      data = doc.css("div.section-content").css("tbody[data-reactid='183']").css("td")
+      total_count = data.count - 1
+      until counter > total_count
+        counter.even? ? city_name = data[counter].text : city_population = data[counter].text
+        cities.merge!({city_name => {population: city_population, state_name: state}})
+        counter += 1
+      end
     end
-    cities
+      cities
   end
 
   def self.grab_bio(index_url)
@@ -155,12 +91,12 @@ class Scraper
     #school_rating =
   end
 
-  def self.check_and_convert_name(name)
+  def self.check_and_convert_name_dash(name)
     name = name.gsub(' ', '-') if name.include?(" ")
     name
   end
 
-  def self.check_and_convert_name_schools(name)
+  def self.check_and_convert_name_underscore(name)
     if name.include?(" ")
       name = name.gsub!(' ', '-')
     elsif name.include?("-")
@@ -172,18 +108,23 @@ class Scraper
   end
 
   def self.create_greatschools_url(name)
-    name = check_and_convert_name_schools(name)
+    name = check_and_convert_name_underscore(name)
     data_url = "https://www.greatschools.org/washington/#{name.downcase}/"
     data_url
   end
 
 
-  def self.create_datausa_url(name)
-    name = check_and_convert_name(name)
-    data_url = "https://datausa.io/profile/geo/#{name.downcase}-wa/"
+  def self.create_datausa_url(name, state_short)
+    name = check_and_convert_name_dash(name)
+    data_url = "https://datausa.io/profile/geo/#{name.downcase}-#{state_short.downcase}/"
     data_url
   end
 
+  def self.create_worldpop_url(name)
+    name = check_and_convert_name_dash(name)
+    data_url = "http://worldpopulationreview.com/states/#{name.downcase}-population/cities/"
+    data_url
+  end
 
 
 
