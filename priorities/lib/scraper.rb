@@ -4,19 +4,21 @@ require 'pry'
 
 class Scraper
 
-  def self.grab_cities(index_url = "https://en.wikipedia.org/wiki/List_of_cities_in_Washington")
+  def self.grab_cities(index_url = "http://worldpopulationreview.com/states/washington-population/cities/")
     #return hash of cities
     cities = {}
     counter = 0
     doc = Nokogiri::HTML(open(index_url))
-    total_count = doc.css("table.wikitable").css("td").count - 6
+    data = doc.css("div.section-content").css("tbody[data-reactid='183']").css("td")
+    total_count = data.count - 1
     until counter > total_count
-      if counter == 0 || counter % 7 == 0
-          city_name = doc.css("table.wikitable").css("td")[counter].text
-          city_population = doc.css("table.wikitable").css("td")[counter + 3].text
-          cities.merge!({city_name => {population: city_population}})
+      if counter.even?
+        city_name = data[counter].text
+      else
+        city_population = data[counter].text
       end
-    counter += 1
+      cities.merge!({city_name => {population: city_population}})
+      counter += 1
     end
     cities
   end

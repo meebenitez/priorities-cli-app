@@ -22,10 +22,11 @@ attr_accessor :last_priority, :priorities
     DOC
     puts <<-DOC.gsub /^\s*/, ''
     1. Big City ( 150K+ )
-    2. Medium to Big Cities ( 50K+ )
-    3. Small Towns (5K to 50K)
-    4. Tiny (< 5K)
-    (please enter 1, 2, 3, or 4)
+    2. Medium City ( 50K to 150K )
+    3. Small City (10K to 50K)
+    4. Small Town (2K to 10 K)
+    5. Tiny (< 2K)
+    (please enter 1, 2, 3, 4, or 5)
     DOC
 
 
@@ -100,7 +101,6 @@ attr_accessor :last_priority, :priorities
 
 
   def results_check
-    puts City.on_count
     if City.on_count > 15
       City.destroy_turned_off
       puts "You've whittled your list down to #{City.on_count} cities.  But let's try to get you down to 10 or less."
@@ -129,7 +129,7 @@ attr_accessor :last_priority, :priorities
     elsif City.on_count == 0
       puts "Looks like none of the cities in your current list fit that priority."
       puts "Let's choose a different one."
-      puts City.reset_last
+      City.reset_last
       pick_priority
     else
       puts "Success!  Here is the list of cities you came up with.  Happy house hunting!"

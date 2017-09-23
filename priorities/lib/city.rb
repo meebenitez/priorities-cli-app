@@ -13,7 +13,7 @@ class City
   def self.on_count
     count = 0
     @@all.each do |city|
-      city.power_switch == "on" if count += 1
+      count += 1 if city.power_switch == "on"
     end
     count
   end
@@ -26,7 +26,7 @@ class City
     @@turned_off.clear
   end
 
-  def create_city(city, cities_hash)
+  def self.create_city(city, cities_hash)
     city_obj = self.new
     city_obj.name = city[0]
     city_obj.population = cities_hash[city[0]][:population]
@@ -39,55 +39,26 @@ class City
     input = gets.strip
     cities_hash = {}
     cities_hash = Scraper.grab_cities
-    #puts cities_hash
     ##############LOOK INTO SEND METHOD#########################
     cities_hash.each do |city|
+      population_count = cities_hash[city[0]][:population].tr(',', '').to_i
       if input == "1"
-        if cities_hash[city[0]][:population].tr(',', '').to_i > 150000
-          city_obj = self.new
-          city_obj.name = city[0]
-          city_obj.population = cities_hash[city[0]][:population]
-          city_obj.power_switch = "on"
-          @@all << city_obj
-        end
+        create_city(city, cities_hash) if population_count > 150000
       elsif input == "2"
-        if cities_hash[city[0]][:population].tr(',', '').to_i > 50000
-          city_obj = self.new
-          #puts city[0]
-          city_obj.name = city[0]
-          city_obj.population = cities_hash[city[0]][:population]
-          city_obj.power_switch = "on"
-          @@all << city_obj
-        end
+        create_city(city, cities_hash) if population_count > 49999 && population_count < 150000
       elsif input == "3"
-        if cities_hash[city[0]][:population].tr(',', '').to_i > 5000 && cities_hash[city[0]][:population].tr(',', '').to_i < 50000
-          city_obj = self.new
-          #puts city[0]
-          city_obj.name = city[0]
-          city_obj.population = cities_hash[city[0]][:population]
-          city_obj.power_switch = "on"
-          @@all << city_obj
-        end
+        create_city(city, cities_hash) if population_count > 9999 && population_count < 50000
       elsif input == "4"
-        if cities_hash[city[0]][:population].tr(',', '').to_i < 5000
-          city_obj = self.new
-          #puts city[0]
-          city_obj.name = city[0]
-          city_obj.population = cities_hash[city[0]][:population]
-          city_obj.power_switch = "on"
-          @@all << city_obj
-        end
+        create_city(city, cities_hash) if population_count > 1999 && population_count < 10000
+      elsif input == "5"
+        create_city(city, cities_hash) if population_count < 2000
       else
         puts "Looks like that's not a valid choice."
-        puts "(please enter 1, 2, 3, or 4)"
+        puts "(please enter 1, 2, 3, 4 or 5)"
         check_population
-        #binding.pry
-        ################################NOT WORKING###################################
+        ##################NOT WORKING###############################
       end
-      #binding.pry
     end
-    #binding.pry
-    #puts all_cities
   end
 
 
@@ -101,7 +72,6 @@ class City
     @@all.each do |city|
       home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name))
       home_price.gsub(/[$,]/, '').to_i < 188900 ? city.avg_home_price = home_price : turn_city_off(city)
-      binding.pry
     end
   end
 
