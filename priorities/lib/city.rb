@@ -162,7 +162,7 @@ class City
   def self.check_affordability
     #based on US home price avg, anything below $188,900 is considered affordable
     @@all.each do |city|
-      home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name))
+      home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name, city.state_short))
       home_price.gsub(/[$,]/, '').to_i < 188900 ? city.avg_home_price = home_price : turn_city_off(city)
     end
   end
@@ -215,8 +215,5 @@ class City
       end
       display_hash
     end
-
-##############ADD NIL CONDITION (NO CITIES MEET THE CRITERIA)
-
 
 end

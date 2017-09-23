@@ -105,30 +105,16 @@ attr_accessor :last_priority, :priorities
 
 
   def results_check
-    if City.on_count > 15
+    if City.on_count > 5
       City.destroy_turned_off
-      puts "You've whittled your list down to #{City.on_count} cities.  But let's try to get you down to 10 or less."
+      puts "Your list currently has #{City.on_count} results.  Let's try to get down to 5 or less."
       if @@counter < 1
-        puts "Let's pick your first priority"
+        puts "Pick your first priority"
         @@counter += 1
         pick_priority
       else
         puts "Pick the next important priority for you..."
         pick_priority
-      end
-    elsif City.on_count < 15 && City.on_count > 8
-      City.destroy_turned_off
-      puts "You're down to #{City.on_count} cities."
-      puts "We're almost there!  I can stop here here and give you more info on these cities.  Or we can keep going."
-      puts "(type 1 for STOP HERE)"
-      puts "(type 2 for KEEP GOING)"
-      input = gets.strip
-      if input == "1"
-        display_results_short(City.create_display_hash)
-      elsif input == "2"
-        pick_priority
-      else
-        puts "invalid entry"
       end
     elsif City.on_count == 0
       puts "Looks like none of the cities in your current list fit that priority."
@@ -136,11 +122,11 @@ attr_accessor :last_priority, :priorities
       City.reset_last
       pick_priority
     else
-      puts "Success!  Here is the list of cities you came up with.  Happy house hunting!"
+      puts "Congratulations!  I've found #{City.on_count} cities you might be interested in checking out."
       display_results_short(City.create_display_hash)
       #need to make a display_results_long
       City.destroy_turned_off
-      puts "Would you like to start over?"
+      puts "Happy House Hunting!"
     end
   end
 

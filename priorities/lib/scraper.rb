@@ -34,10 +34,6 @@ class Scraper
 
 
 
-  def self.grab_bio(index_url)
-  end
-
-
   def self.grab_home_prices(index_url)
     doc = Nokogiri::HTML(open(index_url))
     price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
@@ -105,7 +101,8 @@ class Scraper
 
   def self.create_datausa_url(city_name, state_short)
     city_name = check_and_convert_name_dash(city_name)
-    data_url = "https://datausa.io/profile/geo/#{name.downcase}-#{state_short.downcase}/"
+    data_url = "https://datausa.io/profile/geo/#{city_name.downcase}-#{state_short.downcase}/"
+    #binding.pry
     data_url
   end
 
