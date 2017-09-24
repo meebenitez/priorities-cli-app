@@ -53,7 +53,7 @@ class City
                   "Wyoming" => "WY"
                 }
 
-  @@regions = ["West", "North Rockies", "Southern Rockies", "South Central", "North Central", "Northeast", "Southeast"]
+  @@regions = ["West", "Northern Rockies", "Southern Rockies", "South Central", "North Central", "Northeast", "Southeast"]
   @@all = []
 
   @@turned_off = []
@@ -62,7 +62,9 @@ class City
     @@all
   end
 
-  def self.regions(input)
+
+
+  def self.regions(input) #return the states for the region the user has picked
     region_array = []
     if input == "Northern Rockies"
       region_array = ["Montana", "Idaho", "Wyoming", "North Dakota", "South Dakota", "Nebraska"]
@@ -84,7 +86,7 @@ class City
     region_array
   end
 
-  def self.on_count
+  def self.on_count #grab count of all cities with power_switch turned "on"
     count = 0
     @@all.each do |city|
       count += 1 if city.power_switch == "on"
@@ -92,11 +94,11 @@ class City
     count
   end
 
-  def self.reset_last
+  def self.reset_last #turn city's that were just turned "off,"" back to "on"
     @@turned_off.each { |city| city.power_switch = "on" }
   end
 
-  def self.destroy_turned_off
+  def self.destroy_turned_off #destroy memory of turned "off" cities
     @@turned_off.clear
   end
 
@@ -105,7 +107,7 @@ class City
     short_name
   end
 
-  def self.create_city(city, cities_hash)
+  def self.create_city(city, cities_hash) #initializing attr_accessors first grab of cities
     city_obj = self.new
     city_obj.name = city[0]
     city_obj.population = cities_hash[city[0]][:population]
@@ -116,7 +118,7 @@ class City
   end
 
 
-  def self.pick_region
+  def self.pick_region #ask the user to pick a region
     puts "... and which region of the US do you want to start your search in?"
     @@regions.each_with_index { |region, index| puts "#{index + 1}. #{region}" }
     input = gets.strip.to_i
@@ -125,13 +127,11 @@ class City
     Scraper.generate_state_urls(input)
   end
 
-  def self.check_population
-    input = gets.strip
+  def self.check_population #ask the user to pick a population, and then narrow down the results
+    input = numbered_input_validator(5)
     cities_hash = {}
-    cities_hash = Scraper.grab_cities(pick_region)
-    #generate a hash of city data from Scraper
-    cities_hash.each do |city|
-      #iterate through the grab_cities hash to generate initial data based on the user's Region pick and population choice
+    cities_hash = Scraper.grab_cities(pick_region)#grab urls to iterate through based on user's "region" pick
+    cities_hash.each do |city| #iterate through the grab_cities hash to generate initial data based on the user's Region pick and population choice
       population_count = cities_hash[city[0]][:population].tr(',', '').to_i
       if input == "1"
         create_city(city, cities_hash) if population_count > 150000
@@ -144,6 +144,7 @@ class City
       elsif input == "5"
         create_city(city, cities_hash) if population_count < 2000
       else
+        #invalid choice catch
         puts "Looks like that's not a valid choice."
         puts "(please enter 1, 2, 3, 4 or 5)"
         check_population
@@ -152,8 +153,7 @@ class City
     end
   end
 
-  def self.turn_city_off(city)
-    #Switch a city's power_switch to "off" if they don't meet the criteria of the user's priority pick
+  def self.turn_city_off(city) #Switch a city's power_switch to "off" if they don't meet the criteria of the user's priority pick
     city.power_switch = "off"
     #Log that this city was turned off, just in case we need to reverse the action
     @@turned_off << city
@@ -199,6 +199,7 @@ class City
     end
 
     def self.create_display_hash
+      #generate what the user sees after their search is narrowed down to 5 cities or less
       display_hash = Hash.new do |hash, key|
         hash[key] = {}
       end
@@ -215,5 +216,30 @@ class City
       end
       display_hash
     end
+
+    def self.numbered_input_validator(num_options)#returns valid numbered input
+      input = gets.strip
+      valid_options = (1..num_options).to_a
+      if valid_options.include?(input.to_i)
+        valid_input = input
+      else
+        puts "That's not a valid number.  Please enter a number between #{valid_options[0]} and #{valid_options[num_options - 1]}."
+        numbered_input_validator(num_options)
+      end
+      valid_input
+    end
+
+    def self.yes_no_input_validator
+      input = gets.strip
+      if input.downcase == "y" || input.downcase == "yes"
+        valid_input == "yes"
+      else
+        valid_input == "no"
+      end
+        valid_input
+    end
+
+
+
 
 end

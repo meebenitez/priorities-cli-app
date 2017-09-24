@@ -1,4 +1,5 @@
 require 'pry'
+require 'colorize'
 
 #Our CLI Controller
 class Priorities::CLI
@@ -29,25 +30,12 @@ attr_accessor :last_priority, :priorities
     (please enter 1, 2, 3, 4, or 5)
     DOC
 
-
-    #create_cities_hash(Scraper.grab_cities)
     City.check_population
     results_check
 
   end
 
-
-
-
-
-  def rewind
-    #for the future
-  end
-
-
-
-  def pick_priority
-    #puts "Please choose a priority (type 1 - #{@priorities.count})"
+  def pick_priority #puts "Please choose a priority (type 1 - #{@priorities.count})"
     @@priorities.each_with_index { |priority, index| puts "#{index + 1}. #{priority}" }
     input = gets.strip.to_i
     input = input - 1
@@ -58,8 +46,7 @@ attr_accessor :last_priority, :priorities
     results_check
   end
 
-  def run_priority_check(priority)
-    #["Climate", "School Quality", "Home Affordability", "Employment Rate", "Safety", "Diversity", "Political Mindset"]
+  def run_priority_check(priority) #["Climate", "School Quality", "Home Affordability", "Employment Rate", "Safety", "Diversity", "Political Mindset"]
     if priority == "Home Affordability"
       City.check_affordability
     elsif priority == "Employment Rate"
@@ -82,27 +69,16 @@ attr_accessor :last_priority, :priorities
   end
 
 
-  def display_populations_results
-      puts "You have #{City.all.count} results!  That's much more manageable.  Let's start picking priorities to weed this list down."
-  end
 
   def display_results_short(cities_hash)
     puts "Here are your results:"
     cities_hash.each do |city, attribute|
-      puts "#{city}"
+      puts city.red
       attribute.each do |key, value|
           puts "#{key}: #{value}"
       end
     end
   end
-
-
-
-
-  def check_schools
-    #ratings of 7 and above are considered good
-  end
-
 
   def results_check
     if City.on_count > 5
@@ -122,15 +98,12 @@ attr_accessor :last_priority, :priorities
       City.reset_last
       pick_priority
     else
-      puts "Congratulations!  I've found #{City.on_count} cities you might be interested in checking out."
+      puts "Congratulations!  I've found #{City.on_count} cities you might be interested in checking out.  Here they are:"
       display_results_short(City.create_display_hash)
       #need to make a display_results_long
       City.destroy_turned_off
       puts "Happy House Hunting!"
     end
   end
-
-
-
 
 end
