@@ -5,6 +5,7 @@ class City
   STATE_HASH = {  "Alabama" => "AL",
                   "Alaska" => "AK",
                   "Arizona" => "AZ",
+                  "Arkansas" => "AR",
                   "California" => "CA",
                   "Colorado" => "CO",
                   "Connecticut" => "CT",
@@ -53,7 +54,14 @@ class City
                   "Wyoming" => "WY"
                 }
 
-  @@regions = ["West", "Northern Rockies", "Southern Rockies", "South Central", "North Central", "Northeast", "Southeast"]
+  @@regions = [ ["West", "WA, OR, CA, NV"],
+                ["Northern Rockies", "MT, ID, WY, ND, SD, NE"],
+                ["Southern Rockies", "UT, CO, NM, AZ"],
+                ["South Central", "TX, OK, KS, MO, AR, LA"],
+                ["North Central", "MN, IA, WI, IL, IN, MI, OH"],
+                ["Northeast", "ME, NH, VT, MA, RI, NY, CT, PA, NJ, DE, MD"],
+                ["Southeast", "MS, AL, GA, GL, SC, NC, TN, KY, VA, WV"]
+                ]
   @@all = []
 
   @@turned_off = []
@@ -119,11 +127,12 @@ class City
 
 
   def self.pick_region #ask the user to pick a region
-    puts "... and which region of the US do you want to start your search in?"
-    @@regions.each_with_index { |region, index| puts "#{index + 1}. #{region}" }
+    3.times { fake_delay }
+    puts "And which region of the US do you want to start your search in?".green
+    @@regions.each_with_index { |region, index| puts "#{index + 1}. #{region[0]} (#{region[1]})".blue }
     input = gets.strip.to_i
     input = input - 1
-    input = @@regions[input]
+    input = @@regions[input][0]
     Scraper.generate_state_urls(input)
   end
 
@@ -237,6 +246,11 @@ class City
         valid_input == "no"
       end
         valid_input
+    end
+
+    def self.fake_delay
+      puts "............."
+      sleep(0.5)
     end
 
 
