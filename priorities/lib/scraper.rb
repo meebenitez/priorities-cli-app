@@ -35,9 +35,14 @@ class Scraper
 
 
   def self.grab_home_prices(index_url)
-    doc = Nokogiri::HTML(open(index_url))
-    price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
-    price
+    res = Net::HTTP.get_response(URI.parse(index_url))
+    #if it returns a good code
+    if res.code.to_i >= 200 && res.code.to_i < 400
+      doc = Nokogiri::HTML(open(index_url))
+      price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
+    else
+      puts index_url
+    end
   end
 
   def self.grab_diversity(index_url)
@@ -46,15 +51,6 @@ class Scraper
     white_population = doc.css("section.demographics.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value.stat-small span.stat-right span.stat-subtitle span.stat-span").first.text
     white_population
   end
-
-
-  def self.grab_averages
-    #average home price
-    #average white people
-    #average crime index
-
-  end
-
 
 
   def self.grab_safety(index_url="http://www.usa.com/rank/washington-state--crime-index--city-rank.htm")

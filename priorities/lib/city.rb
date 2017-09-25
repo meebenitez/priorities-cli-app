@@ -186,20 +186,23 @@ class City
   end
 
   def self.check_affordability
-    #based on US home price avg, anything below $188,900 is considered affordable
+    user_budget = input_price_validator.to_i #grab the user's budget
     @@all.each do |city|
+      puts ["x","o"].sample
       home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name, city.state_short))
-      home_price.gsub(/[$,]/, '').to_i < 188900 ? city.avg_home_price = home_price : turn_city_off(city)
+      unless home_price == nil
+        home_price.gsub(/[$,mM]/, '').to_i < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
+      end
     end
   end
 
   def self.check_diversity
-    #us average of white people is 63%
     @@all.each do |city|
       total_population = city.population.tr(',', '').to_i### total population
       white_population = Scraper.grab_diversity(Scraper.create_datausa_url(city.name, city.state_short)).tr(',', '').to_i
       unless city.power_switch == "off"
         diversity_percent = diversity_percentage(total_population, white_population)
+        #us
         diversity_percent > 37 ? city.diversity_percent = diversity_percent : turn_city_off(city)
       end
     end
@@ -256,14 +259,28 @@ class City
   end
 
   def self.yes_no_input_validator
+    puts "enter 'yes' or 'no'"
     input = gets.strip
     if input.downcase == "y" || input.downcase == "yes"
-      valid_input == "yes"
+      valid_input = "yes"
     else
-      valid_input == "no"
+      valid_input = "no"
     end
       valid_input
   end
+
+  def self.input_price_validator
+    puts "Please enter your home budget:"
+    input = gets.strip
+    #example "$46,990".gsub(/[\D]/, "")
+    input = input.gsub(/[\D]/, "")
+    puts "You entered $#{comma_numbers(input)}. Is this correct?"
+    yes_no_input_validator == "yes" ? input : input_price_validator
+  end
+
+  def self.comma_numbers(number, delimiter = ',')
+  number.to_s.reverse.gsub(%r{([0-9]{3}(?=([0-9])))}, "\\1#{delimiter}").reverse
+end
 
   def self.fake_delay
     puts "............."

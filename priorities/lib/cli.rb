@@ -100,6 +100,8 @@ puts "(please enter 1, 2, 3, 4, or 5)".green
       City.check_weather
     elsif priority == "Home Affordability"
       City.check_affordability
+      3.times { City.fake_delay }
+      puts "Finding cities where the average home price fits your budget."
     elsif priority == "Job Market Health"
       puts nil
     elsif priority == "School Quality"
