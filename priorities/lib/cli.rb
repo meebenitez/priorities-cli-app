@@ -6,7 +6,7 @@ class Priorities::CLI
 
 attr_accessor :last_priority, :priorities
 
-@@priorities = ["Climate", "School Quality", "Home Affordability", "Employment Rate", "Safety", "Diversity", "Political Mindset"]
+@@priorities = ["Weather", "School Quality", "Home Affordability", "Job Market Health", "Safety", "Racial Diversity", "Political Climate"]
 @@priority_pick_order = []
 
 @@counter = 0
@@ -63,7 +63,7 @@ I'll be asking you simple questions, and with the answers you give me, I'll comb
 Let's get started...
 First things first, I'll be looking at EVERY CITY in the lower 48 states.
 DOC
-puts "To help me narrow down that search, please tell me what size city you want to live in...1".green
+puts "To help me narrow down that search, please tell me what size city you want to live in...".green
 puts " "
 puts "1. Big City ( pop. 150K+ )".blue
 puts "2. Medium City ( pop. 50K to 150K )".blue
@@ -90,23 +90,25 @@ puts "(please enter 1, 2, 3, 4, or 5)".green
     @@priority_pick_order << priority
     results_check
     else
-      puts "Looks like we've run out of priorities to choose from.  I guess that means you have lots of cities to look into.  Hurray for options!  Here's your list of cities.  Happy house hunting!"
+      puts "Looks like we've run out of priorities to choose from before we could get our list down to 5.  I guess that means you have lots of cities to look into.  Hurray for options!  Here's your list of cities.  Happy house hunting!"
       display_results_short(City.create_display_hash)
     end
   end
 
-  def run_priority_check(priority) #["Climate", "School Quality", "Home Affordability", "Employment Rate", "Safety", "Diversity", "Political Mindset"]
-    if priority == "Home Affordability"
+  def run_priority_check(priority) #["Weather", "School Quality", "Home Affordability", "Job Market Health", "Safety", "Racial Diversity", "Political Climate"]
+    if priority == "Weather"
+      City.check_weather
+    elsif priority == "Home Affordability"
       City.check_affordability
-    elsif priority == "Employment Rate"
+    elsif priority == "Job Market Health"
       puts nil
     elsif priority == "School Quality"
       City.check_schools
     elsif priority == "Safety"
       City.check_safety
-    elsif priority == "Diversity"
+    elsif priority == "Racial Diversity"
       City.check_diversity
-    elsif priority == "Political Mindset"
+    elsif priority == "Political Climate"
       puts nil
     else
       puts nil
@@ -117,14 +119,25 @@ puts "(please enter 1, 2, 3, 4, or 5)".green
     @@priorities.reset!
   end
 
+#  def priority_descriptions(priority, extra = nil) #["Weather", "School Quality", "Home Affordability", "Job Market Health", "Safety", "Racial Diversity", "Political Climate"]
+#      if priority == "Weather"
+#        4.times { City.fake_delay }
+#        puts "Finding #{extra} cities for you"
+#        4.times { City.fake_delay }
+#      elsif priority == "School Quality"
+#        4.times { City.fake_delay }
+#        puts "Finding Schools "
+
+
+#  end
+
 
 
   def display_results_short(cities_hash)
-    puts "Here are your results:"
     cities_hash.each do |city, attribute|
       puts city.red
       attribute.each do |key, value|
-          puts "#{key}: #{value}"
+          puts "#{key}: #{value}".magenta
       end
     end
   end
@@ -132,13 +145,14 @@ puts "(please enter 1, 2, 3, 4, or 5)".green
   def results_check
     if City.on_count > 5
       City.destroy_turned_off
-      puts "Your list currently has #{City.on_count} results.  Let's try to get down to 5 or less."
       if @@counter < 1
-        puts "Pick your first priority"
+        puts "Alright! I've gathered a list of #{City.on_count} cities for us to start with. Now, let's start picking priorities!"
+        puts "Below is a list of things that a home buyer might consider when choosing a city to move to."
+        puts "Give it a quick read, and then pick the priority that would be MOST important to you.".green
         @@counter += 1
         pick_priority
       else
-        puts "Pick the next important priority for you..."
+        puts "We're at #{City.on_count} cities.  Let's pick another priority!".green
         pick_priority
       end
     elsif City.on_count == 0
@@ -147,11 +161,12 @@ puts "(please enter 1, 2, 3, 4, or 5)".green
       City.reset_last
       pick_priority
     else
-      puts "Congratulations!  I've found #{City.on_count} cities you might be interested in checking out.  Here they are:"
+      puts "Congratulations!  Based on the answers you gave me, I've found #{City.on_count} cities that might be excellent for you!  Here they are:".blue
       display_results_short(City.create_display_hash)
       #need to make a display_results_long
       City.destroy_turned_off
-      puts "Happy House Hunting!"
+      puts " "
+      puts "HAPPY HOUSE HUNTING!".green
     end
   end
 

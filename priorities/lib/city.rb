@@ -1,3 +1,6 @@
+require 'pry'
+require 'colorize'
+
 class City
 
   attr_accessor :name, :avg_home_price, :diversity_percent, :population, :crime_index, :school_score, :power_switch, :state_short, :state_long, :bio
@@ -133,6 +136,7 @@ class City
     input = gets.strip.to_i
     input = input - 1
     input = @@regions[input][0]
+    5.times { fake_delay }
     Scraper.generate_state_urls(input)
   end
 
@@ -177,6 +181,11 @@ class City
   end
 
   def self.check_diversity
+    3.times { fake_delay }
+    puts "I'm pulling cities where the percentage of non-White residents is higher than the national average of 47%"
+    2.times { fake_delay }
+    puts "searching..."
+    puts "searching..."
     #us average of white people is 63%
     @@all.each do |city|
       total_population = city.population.tr(',', '').to_i### total population
