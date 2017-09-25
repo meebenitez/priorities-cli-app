@@ -107,6 +107,11 @@ puts "(please enter 1, 2, 3, 4, or 5)".green
     elsif priority == "Safety"
       City.check_safety
     elsif priority == "Racial Diversity"
+      3.times { City.fake_delay }
+      puts "I'm pulling cities where the percentage of non-White residents is higher than the national average of 47%"
+      2.times { City.fake_delay }
+      puts "searching..."
+      puts "searching..."
       City.check_diversity
     elsif priority == "Political Climate"
       puts nil

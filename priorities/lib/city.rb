@@ -89,10 +89,8 @@ class City
       region_array = ["Minnesota", "Iowa", "Wisconsin", "Illinois", "Indiana", "Michigan", "Ohio"]
     elsif input == "Northeast"
       region_array = ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "New York", "Connecticut", "Pennsylvania", "New Jersey", "Delaware", "Maryland"]
-    elsif input == "West"
+    else input == "West"
       region_array = ["Washington", "California", "Oregon", "Nevada"]
-    else
-      #
     end
     region_array
   end
@@ -130,20 +128,41 @@ class City
 
 
   def self.pick_region #ask the user to pick a region
-    3.times { fake_delay }
     puts "And which region of the US do you want to start your search in?".green
     @@regions.each_with_index { |region, index| puts "#{index + 1}. #{region[0]} (#{region[1]})".blue }
-    input = gets.strip.to_i
-    input = input - 1
+    input = numbered_input_validator(@@regions.count)
+    input = input.to_i - 1
     input = @@regions[input][0]
     5.times { fake_delay }
+    puts "Searching for cities in the #{input} region of the United States..."
+    3.times { fake_delay }
     Scraper.generate_state_urls(input)
+  end
+
+  def self.population_search_message(input)
+    if input == "1"
+      puts "With a population greater than 150,000 residents..."
+      3.times { fake_delay }
+    elsif input == "2"
+      puts "With a population between 50,000 and 150,0000 residents..."
+      3.times { fake_delay }
+    elsif input == "3"
+      puts "With a population between 10,000 and 50,0000 residents..."
+      3.times { fake_delay }
+    elsif input == "4"
+      puts "With a population between 2,000 and 10,000 residents..."
+      3.times { fake_delay }
+    else
+      puts "With a population less than 2,000 residents..."
+      3.times { fake_delay }
+    end
   end
 
   def self.check_population #ask the user to pick a population, and then narrow down the results
     input = numbered_input_validator(5)
     cities_hash = {}
     cities_hash = Scraper.grab_cities(pick_region)#grab urls to iterate through based on user's "region" pick
+    population_search_message(input)
     cities_hash.each do |city| #iterate through the grab_cities hash to generate initial data based on the user's Region pick and population choice
       population_count = cities_hash[city[0]][:population].tr(',', '').to_i
       if input == "1"
@@ -154,14 +173,8 @@ class City
         create_city(city, cities_hash) if population_count > 9999 && population_count < 50000
       elsif input == "4"
         create_city(city, cities_hash) if population_count > 1999 && population_count < 10000
-      elsif input == "5"
-        create_city(city, cities_hash) if population_count < 2000
       else
-        #invalid choice catch
-        puts "Looks like that's not a valid choice."
-        puts "(please enter 1, 2, 3, 4 or 5)"
-        check_population
-        ##################NOT WORKING###############################
+        create_city(city, cities_hash) if population_count < 2000
       end
     end
   end
@@ -181,11 +194,6 @@ class City
   end
 
   def self.check_diversity
-    3.times { fake_delay }
-    puts "I'm pulling cities where the percentage of non-White residents is higher than the national average of 47%"
-    2.times { fake_delay }
-    puts "searching..."
-    puts "searching..."
     #us average of white people is 63%
     @@all.each do |city|
       total_population = city.population.tr(',', '').to_i### total population
@@ -197,70 +205,70 @@ class City
     end
   end
 
-    def self.diversity_percentage(total_population, white_population)
-      percent = (white_population * 100) / total_population
-      percent = 100 - percent
-      percent
-    end
+  def self.diversity_percentage(total_population, white_population)
+    percent = (white_population * 100) / total_population
+    percent = 100 - percent
+    percent
+  end
 
-    def check_safety
-      #safety rating under 2000 is safe
-      Scraper.grab_safety.each do |city1, safety_index|
-        @@all.each do |city|
-          if city[0] == city1 && safety_index.tr(',', '').to_i > 2000
-            all_cities.delete(city[0])
-          else
-              all_cities[city[0]][:crime_index] = safety_index if city[0] == city1
-          end
-        end
-      end
-    end
-
-    def self.create_display_hash
-      #generate what the user sees after their search is narrowed down to 5 cities or less
-      display_hash = Hash.new do |hash, key|
-        hash[key] = {}
-      end
+  def check_safety
+    #safety rating under 2000 is safe
+    Scraper.grab_safety.each do |city1, safety_index|
       @@all.each do |city|
-        if city.power_switch == "on"
-          main_key = "#{city.name}, #{city.state_short}"
-          city.instance_variables.each do |var|
-            unless var.to_s.delete("@") == "state_short" || var.to_s.delete("@") == "state_long" || var.to_s.delete("@") == "name" || var.to_s.delete("@") == "power_switch"
-              sub_key = var.to_s.delete("@")
-              display_hash[main_key][sub_key] = city.instance_variable_get(var)
-            end
+        if city[0] == city1 && safety_index.tr(',', '').to_i > 2000
+          all_cities.delete(city[0])
+        else
+            all_cities[city[0]][:crime_index] = safety_index if city[0] == city1
+        end
+      end
+    end
+  end
+
+  def self.create_display_hash
+    #generate what the user sees after their search is narrowed down to 5 cities or less
+    display_hash = Hash.new do |hash, key|
+      hash[key] = {}
+    end
+    @@all.each do |city|
+      if city.power_switch == "on"
+        main_key = "#{city.name}, #{city.state_short}"
+        city.instance_variables.each do |var|
+          unless var.to_s.delete("@") == "state_short" || var.to_s.delete("@") == "state_long" || var.to_s.delete("@") == "name" || var.to_s.delete("@") == "power_switch"
+            sub_key = var.to_s.delete("@")
+            display_hash[main_key][sub_key] = city.instance_variable_get(var)
           end
         end
       end
-      display_hash
     end
+    display_hash
+  end
 
-    def self.numbered_input_validator(num_options)#returns valid numbered input
-      input = gets.strip
-      valid_options = (1..num_options).to_a
-      if valid_options.include?(input.to_i)
-        valid_input = input
-      else
-        puts "That's not a valid number.  Please enter a number between #{valid_options[0]} and #{valid_options[num_options - 1]}."
-        numbered_input_validator(num_options)
-      end
+  def self.numbered_input_validator(num_options)#returns valid numbered input
+    input = gets.strip
+    valid_options = (1..num_options).to_a
+    if valid_options.include?(input.to_i)
+      valid_input = input
+    else
+      puts "That's not a valid number.  Please enter a number between #{valid_options[0]} and #{valid_options[num_options - 1]}."
+      numbered_input_validator(num_options)
+    end
+    valid_input
+  end
+
+  def self.yes_no_input_validator
+    input = gets.strip
+    if input.downcase == "y" || input.downcase == "yes"
+      valid_input == "yes"
+    else
+      valid_input == "no"
+    end
       valid_input
-    end
+  end
 
-    def self.yes_no_input_validator
-      input = gets.strip
-      if input.downcase == "y" || input.downcase == "yes"
-        valid_input == "yes"
-      else
-        valid_input == "no"
-      end
-        valid_input
-    end
-
-    def self.fake_delay
-      puts "............."
-      sleep(0.5)
-    end
+  def self.fake_delay
+    puts "............."
+    sleep(0.5)
+  end
 
 
 
