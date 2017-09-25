@@ -154,10 +154,10 @@ class City
       puts "With a population greater than 150,000 residents..."
       3.times { fake_delay }
     elsif input == "2"
-      puts "With a population between 100,000 and 150,0000 residents..."
+      puts "With a population between 100,000 and 150,000 residents..."
       3.times { fake_delay }
     elsif input == "3"
-      puts "With a population between 50,000 and 100,0000 residents..."
+      puts "With a population between 50,000 and 100,000 residents..."
       3.times { fake_delay }
     elsif input == "4"
       puts "With a population between 25,000 and 50,000 residents..."
@@ -171,20 +171,22 @@ class City
   end
 
   def self.check_population #ask the user to pick a population, and then narrow down the results
-    input = numbered_input_validator(5)
+    input = numbered_input_validator(6)
     cities_hash = {}
     cities_hash = Scraper.grab_cities(pick_region)#grab urls to iterate through based on user's "region" pick
     population_search_message(input)
     cities_hash.each do |city| #iterate through the grab_cities hash to generate initial data based on the user's Region pick and population choice
       population_count = cities_hash[city[0]][:population].tr(',', '').to_i
       if input == "1"
-        create_city(city, cities_hash) if population_count > 150000
+        create_city(city, cities_hash) if population_count > 149999
       elsif input == "2"
-        create_city(city, cities_hash) if population_count > 49999 && population_count < 150000
+        create_city(city, cities_hash) if population_count > 99999 && population_count < 150000
       elsif input == "3"
-        create_city(city, cities_hash) if population_count > 9999 && population_count < 50000
+        create_city(city, cities_hash) if population_count > 49999 && population_count < 100000
       elsif input == "4"
-        create_city(city, cities_hash) if population_count > 1999 && population_count < 10000
+        create_city(city, cities_hash) if population_count > 24999 && population_count < 50000
+      elsif input == "5"
+        create_city(city, cities_hash) if population_count > 1999 && population_count < 25000
       else
         create_city(city, cities_hash) if population_count < 2000
       end

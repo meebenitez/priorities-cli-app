@@ -66,11 +66,12 @@ DOC
 puts "To help me narrow down that search, please tell me what size city you want to live in...".green
 puts " "
 puts "1. Big City ( pop. 150K+ )".blue
-puts "2. Medium City ( pop. 50K to 150K )".blue
-puts "3. Small City (pop. 10K to 50K)".blue
-puts "4. Small Town (pop. 2K to 10 K)".blue
-puts "5. Really Small Town (< pop. 2K)".blue
-puts "(please enter 1, 2, 3, 4, or 5)".green
+puts "2. Medium Big City ( pop. 100K to 150K )".blue
+puts "3. Medium City (pop. 50K to 100K)".blue
+puts "4. Medium Small City (pop. 25K to 50K)".blue
+puts "5. Small City (pop. 2K to 25K)".blue
+puts "6. Small Town (< pop. 2K)".blue
+puts "(please enter 1, 2, 3, 4, 5, or 6)".green
 
 
     City.check_population
