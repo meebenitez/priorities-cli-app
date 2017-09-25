@@ -10,6 +10,7 @@ class Scraper
   def self.generate_state_urls(input)
     url_hash = {}
     City.regions(input).each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
+#    binding.pry
     url_hash
   end
 
@@ -19,9 +20,18 @@ class Scraper
     #return hash of cities
     cities = {}
     url_hash.each do |state, state_url|
+      #binding.pry
       counter = 0
       doc = Nokogiri::HTML(open(state_url))
-      data = doc.css("div.section-content").css("tbody[data-reactid='183']").css("td")
+      if state == "California"
+        data = doc.css("div.section-content").css("tbody[data-reactid='191']").css("td")
+      elsif state == "Georgia" || state == "Kentucky" || state == "Montana" || state == "Vermont"
+        data = doc.css("div.section-content").css("tbody[data-reactid='167']").css("td")
+      elsif state == "Idaho" || state == "Indiana" || state == "Tennessee" || state == "Virginia" || state == "Wisconsin"
+        data = doc.css("div.section-content").css("tbody[data-reactid='175']").css("td")
+        else
+        data = doc.css("div.section-content").css("tbody[data-reactid='183']").css("td")
+      end
       total_count = data.count - 1
       until counter > total_count
         counter.even? ? city_name = data[counter].text : city_population = data[counter].text
@@ -29,6 +39,7 @@ class Scraper
         counter += 1
       end
     end
+#    binding.pry
       cities
   end
 
@@ -106,6 +117,7 @@ class Scraper
     state_name = check_and_convert_name_dash(state_name)
     data_url = "http://worldpopulationreview.com/states/#{state_name.downcase}-population/cities/"
     data_url
+      #  binding.pry
   end
 
 

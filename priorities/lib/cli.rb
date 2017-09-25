@@ -66,12 +66,14 @@ DOC
 puts "To help me narrow down that search, please tell me what size city you want to live in...".green
 puts " "
 puts "1. Big City ( pop. 150K+ )".blue
-puts "2. Medium Big City ( pop. 100K to 150K )".blue
+puts "2. Medium Big City (pop. 100K to 150K)".blue
 puts "3. Medium City (pop. 50K to 100K)".blue
-puts "4. Medium Small City (pop. 25K to 50K)".blue
-puts "5. Small City (pop. 2K to 25K)".blue
-puts "6. Small Town (< pop. 2K)".blue
-puts "(please enter 1, 2, 3, 4, 5, or 6)".green
+puts "4. Medium Small City (pop. 30K to 50K)".blue
+puts "5. Small City (pop. 10K to 30K)".blue
+puts "6. Small Town (pop. 5K to 10K)".blue
+puts "7. Really small town (pop. 1K to 5K )".blue
+puts "8. Super tiny. (pop. < 1K)".blue
+puts "(please enter 1, 2, 3, 4, 5, 6, 7, or 8 )".green
 
 
     City.check_population
@@ -164,17 +166,31 @@ puts "(please enter 1, 2, 3, 4, 5, or 6)".green
         pick_priority
       end
     elsif City.on_count == 0
-      puts "Looks like none of the cities in your current list fit that priority."
-      puts "Let's choose a different one."
-      City.reset_last
-      pick_priority
+      if @@counter < 1
+        puts "Wow.  Looks like we couldn't find any cities that size in the region you picked.  That's okay, we'll just start picking priorities"
+        puts "Below is a list of things that a home buyer might consider when choosing a city to move to."
+        puts "Give it a quick read, and then pick the priority that would be MOST important to you.".green
+        @@counter += 1
+        pick_priority
+      else
+        puts "Looks like none of the cities in your current list fit that priority."
+        puts "Let's choose a different one."
+        City.reset_last
+        pick_priority
+      end
     else
-      puts "Congratulations!  Based on the answers you gave me, I've found #{City.on_count} cities that might be excellent for you!  Here they are:".blue
-      display_results_short(City.create_display_hash)
-      #need to make a display_results_long
-      City.destroy_turned_off
-      puts " "
-      puts "HAPPY HOUSE HUNTING!".green
+      if @@counter < 1
+        puts "LOL, well that was easy.  We only found #{City.on_count} cities.  Here they are..."
+        display_results_short(City.create_display_hash)
+        City.destroy_turned_off
+        puts "Want to try again?  Maybe we'll get a list and can start picking priorites.".green
+      else
+        puts "Congratulations!  Based on the answers you gave me, I've found #{City.on_count} cities that might be excellent for you!  Here they are:".blue
+        display_results_short(City.create_display_hash)
+        City.destroy_turned_off
+        puts " "
+        puts "HAPPY HOUSE HUNTING!".green
+      end
     end
   end
 

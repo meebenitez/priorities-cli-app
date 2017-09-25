@@ -57,15 +57,25 @@ class City
                   "Wyoming" => "WY"
                 }
 
-  @@regions = [ ["West", "CA, NV"],
+  @@regions = [ ["Northwest", "WA, OR, ID"],
+                ["West", "CA, NV"],
                 ["Northern Rockies and Plains", "MT, WY, ND, SD, NE"],
                 ["Southwest", "UT, CO, NM, AZ"],
-                ["South", "TX, OK, KS, MI, AR, LA"],
+                ["South", "TX, OK, KS, MS, AR, LA"],
                 ["Upper Midwest", "MN, IA, WI, MI"],
                 ["Central", "MO, IL, IN, OH, KY, TN, WV"],
                 ["Northeast", "ME, NH, VT, MA, RI, NY, CT, PA, NJ, DE, MD"],
                 ["Southeast", "AL, GA, FL, SC, NC, VA"]
                 ]
+
+  @@population_choices = {"Big City" => {greater_than: 149999, less_than: 10000000, description: "pop. 150K+"},
+                          "Medium Big City" => {greater_than: 74999, less_than: 150000, description: "pop. 75K to 150K"},
+                          "Medium City" => {greater_than: 34999, less_than: 75000, description: "pop. 35K to 75K"},
+                          "Small City" => {greater_than: 9999, less_than: 35000, description: "pop. 10K to 35K"},
+                          "Small Town" => {greater_than: 999, less_than: 10000, description: "pop. 1K to 10K"},
+                          "Tiny" => {greater_than: 0, less_than: 1000, description: "pop. < 1K"}
+                          }
+
   @@all = []
 
   @@turned_off = []
@@ -89,12 +99,12 @@ class City
     elsif input == "Upper Midwest"
       region_array = ["Minnesota", "Iowa", "Wisconsin", "Michigan"]
     elsif input == "Central"
-      region_array == ["Missouri", "Illinois", "Indiana", "Ohio", "Kentucky", "Tennessee", "West Virginia"]
+      region_array = ["Missouri", "Illinois", "Indiana", "Ohio", "Kentucky", "Tennessee", "West Virginia"]
     elsif input == "Northeast"
       region_array = ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "New York", "Connecticut", "Pennsylvania", "New Jersey", "Delaware", "Maryland"]
     elsif input == "Northwest"
       region_array = ["Washington", "Oregon", "Idaho"]
-    else input == "West"
+    else
       region_array = ["California", "Nevada"]
     end
     region_array
@@ -131,6 +141,17 @@ class City
     @@all << city_obj
   end
 
+  def self.pick_population
+    puts "To help me narrow down that search, please tell me what size city you want to live in...".green
+    puts " "
+    @@population_choices.each_with_index { |choice, index| puts "#{index +1}. #{@@population_choices[choice[0]]} #{@@population_choices[choice[0]][:description]}".blue }
+    input = numbered_input_validator(@@population_choices.length)
+    input = input.to_i -1
+    input = @@population_choices
+    ##############
+  end
+
+
 
   def self.pick_region #ask the user to pick a region
     puts "And which region of the US do you want to start your search in?".green
@@ -138,9 +159,9 @@ class City
     input = numbered_input_validator(@@regions.count)
     input = input.to_i - 1
     input = @@regions[input][0]
-    5.times { fake_delay }
+    #5.times { fake_delay }
     puts "Searching for cities in the #{input} region of the United States..."
-    3.times { fake_delay }
+    #3.times { fake_delay }
     Scraper.generate_state_urls(input)
   end
 
@@ -150,30 +171,30 @@ class City
   end
 
   def self.population_search_message(input)
-    if input == "1"
+    if input == "Big City"
       puts "With a population greater than 150,000 residents..."
-      3.times { fake_delay }
-    elsif input == "2"
+      #3.times { fake_delay }
+    elsif input == "Medium Big City"
       puts "With a population between 100,000 and 150,000 residents..."
-      3.times { fake_delay }
-    elsif input == "3"
+      #3.times { fake_delay }
+    elsif input == "Medium City"
       puts "With a population between 50,000 and 100,000 residents..."
-      3.times { fake_delay }
-    elsif input == "4"
-      puts "With a population between 25,000 and 50,000 residents..."
-      3.times { fake_delay }
-    elsif input == "5"
-      puts "With a population between 2,000 and 25,000 residents..."
+      #3.times { fake_delay }
+    elsif input == "Small City"
+      puts "With a population between 30,000 and 50,000 residents..."
+    elsif input == "Small Town"
+      puts "Test"
     else
-      puts "With a population less than 2,000 residents..."
-      3.times { fake_delay }
+      puts "With a population less than 1,000 residents..."
+      #3.times { fake_delay }
     end
   end
 
   def self.check_population #ask the user to pick a population, and then narrow down the results
-    input = numbered_input_validator(6)
+    input = self.pick_population
     cities_hash = {}
     cities_hash = Scraper.grab_cities(pick_region)#grab urls to iterate through based on user's "region" pick
+    #puts cities_hash.count
     population_search_message(input)
     cities_hash.each do |city| #iterate through the grab_cities hash to generate initial data based on the user's Region pick and population choice
       population_count = cities_hash[city[0]][:population].tr(',', '').to_i
@@ -184,11 +205,15 @@ class City
       elsif input == "3"
         create_city(city, cities_hash) if population_count > 49999 && population_count < 100000
       elsif input == "4"
-        create_city(city, cities_hash) if population_count > 24999 && population_count < 50000
+        create_city(city, cities_hash) if population_count > 29999 && population_count < 50000
       elsif input == "5"
-        create_city(city, cities_hash) if population_count > 1999 && population_count < 25000
+        create_city(city, cities_hash) if population_count > 9999 && population_count < 30000
+      elsif input == "6"
+        create_city(city, cities_hash) if population_count > 4999 && population_count < 10000
+      elsif input == "7"
+        create_city(city, cities_hash) if population_count > 999 && population_count < 5000
       else
-        create_city(city, cities_hash) if population_count < 2000
+        create_city(city, cities_hash) if population_count < 1000
       end
     end
   end
@@ -269,7 +294,8 @@ class City
       puts "That's not a valid number.  Please enter a number between #{valid_options[0]} and #{valid_options[num_options - 1]}."
       numbered_input_validator(num_options)
     end
-    valid_input
+    #binding.pry
+    #valid_input
   end
 
   def self.yes_no_input_validator
