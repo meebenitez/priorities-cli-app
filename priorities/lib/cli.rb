@@ -63,18 +63,6 @@ I'll be asking you simple questions, and with the answers you give me, I'll comb
 Let's get started...
 First things first, I'll be looking at EVERY CITY in the lower 48 states.
 DOC
-puts "To help me narrow down that search, please tell me what size city you want to live in...".green
-puts " "
-puts "1. Big City ( pop. 150K+ )".blue
-puts "2. Medium Big City (pop. 100K to 150K)".blue
-puts "3. Medium City (pop. 50K to 100K)".blue
-puts "4. Medium Small City (pop. 30K to 50K)".blue
-puts "5. Small City (pop. 10K to 30K)".blue
-puts "6. Small Town (pop. 5K to 10K)".blue
-puts "7. Really small town (pop. 1K to 5K )".blue
-puts "8. Super tiny. (pop. < 1K)".blue
-puts "(please enter 1, 2, 3, 4, 5, 6, 7, or 8 )".green
-
 
     City.check_population
     results_check

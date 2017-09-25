@@ -144,11 +144,11 @@ class City
   def self.pick_population
     puts "To help me narrow down that search, please tell me what size city you want to live in...".green
     puts " "
-    @@population_choices.each_with_index { |choice, index| puts "#{index +1}. #{@@population_choices[choice[0]]} #{@@population_choices[choice[0]][:description]}".blue }
+    @@population_choices.each_with_index { |choice, index| puts "#{index +1}. #{choice[0]} (#{@@population_choices[choice[0]][:description]})".blue }
     input = numbered_input_validator(@@population_choices.length)
-    input = input.to_i -1
-    input = @@population_choices
-    ##############
+    input = input.to_i - 1
+    input = @@population_choices.keys[input]
+    input
   end
 
 
@@ -198,20 +198,16 @@ class City
     population_search_message(input)
     cities_hash.each do |city| #iterate through the grab_cities hash to generate initial data based on the user's Region pick and population choice
       population_count = cities_hash[city[0]][:population].tr(',', '').to_i
-      if input == "1"
+      if input == "Big City"
         create_city(city, cities_hash) if population_count > 149999
-      elsif input == "2"
-        create_city(city, cities_hash) if population_count > 99999 && population_count < 150000
-      elsif input == "3"
-        create_city(city, cities_hash) if population_count > 49999 && population_count < 100000
-      elsif input == "4"
-        create_city(city, cities_hash) if population_count > 29999 && population_count < 50000
-      elsif input == "5"
-        create_city(city, cities_hash) if population_count > 9999 && population_count < 30000
-      elsif input == "6"
-        create_city(city, cities_hash) if population_count > 4999 && population_count < 10000
-      elsif input == "7"
-        create_city(city, cities_hash) if population_count > 999 && population_count < 5000
+      elsif input == "Medium Big City"
+        create_city(city, cities_hash) if population_count > 74999 && population_count < 150000
+      elsif input == "Medium City"
+        create_city(city, cities_hash) if population_count > 34999 && population_count < 75000
+      elsif input == "Small City"
+        create_city(city, cities_hash) if population_count > 9999 && population_count < 35000
+      elsif input == "Small Town"
+        create_city(city, cities_hash) if population_count > 999 && population_count < 10000
       else
         create_city(city, cities_hash) if population_count < 1000
       end
@@ -225,9 +221,8 @@ class City
   end
 
   def self.check_affordability
-    user_budget = input_price_validator.to_i #grab the user's budget
+    user_budget = input_price_validator.to_i + 1 #grab the user's budget
     @@all.each do |city|
-      puts ["x","o"].sample
       home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name, city.state_short))
       unless home_price == nil
         home_price.gsub(/[$,mM]/, '').to_i < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
