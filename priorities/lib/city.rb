@@ -57,13 +57,14 @@ class City
                   "Wyoming" => "WY"
                 }
 
-  @@regions = [ ["West", "WA, OR, CA, NV"],
-                ["Northern Rockies", "MT, ID, WY, ND, SD, NE"],
-                ["Southern Rockies", "UT, CO, NM, AZ"],
-                ["South Central", "TX, OK, KS, MO, AR, LA"],
-                ["North Central", "MN, IA, WI, IL, IN, MI, OH"],
+  @@regions = [ ["West", "CA, NV"],
+                ["Northern Rockies and Plains", "MT, WY, ND, SD, NE"],
+                ["Southwest", "UT, CO, NM, AZ"],
+                ["South", "TX, OK, KS, MI, AR, LA"],
+                ["Upper Midwest", "MN, IA, WI, MI"],
+                ["Central", "MO, IL, IN, OH, KY, TN, WV"],
                 ["Northeast", "ME, NH, VT, MA, RI, NY, CT, PA, NJ, DE, MD"],
-                ["Southeast", "MS, AL, GA, GL, SC, NC, TN, KY, VA, WV"]
+                ["Southeast", "AL, GA, FL, SC, NC, VA"]
                 ]
   @@all = []
 
@@ -77,20 +78,24 @@ class City
 
   def self.regions(input) #return the states for the region the user has picked
     region_array = []
-    if input == "Northern Rockies"
-      region_array = ["Montana", "Idaho", "Wyoming", "North Dakota", "South Dakota", "Nebraska"]
-    elsif input == "Southern Rockies"
+    if input == "Northern Rockies and Plains"
+      region_array = ["Montana", "Wyoming", "North Dakota", "South Dakota", "Nebraska"]
+    elsif input == "Southwest"
       region_array = ["Utah", "Colorado", "New Mexico", "Arizona"]
-    elsif input == "South Central"
-      region_array = ["Texas", "Oklahoma", "Kansas", "Missouri", "Arkansas", "Louisiana"]
+    elsif input == "South"
+      region_array = ["Texas", "Oklahoma", "Kansas", "Mississippi", "Arkansas", "Louisiana"]
     elsif input == "Southeast"
-      region_array = ["Mississippi", "Alabama", "Georgia", "Florida", "South Carolina", "North Carolina", "Tennessee", "Kentucky", "Virginia", "West Virginia"]
-    elsif input == "North Central"
-      region_array = ["Minnesota", "Iowa", "Wisconsin", "Illinois", "Indiana", "Michigan", "Ohio"]
+      region_array = ["Alabama", "Georgia", "Florida", "South Carolina", "North Carolina", "Virginia"]
+    elsif input == "Upper Midwest"
+      region_array = ["Minnesota", "Iowa", "Wisconsin", "Michigan"]
+    elsif input == "Central"
+      region_array == ["Missouri", "Illinois", "Indiana", "Ohio", "Kentucky", "Tennessee", "West Virginia"]
     elsif input == "Northeast"
       region_array = ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "New York", "Connecticut", "Pennsylvania", "New Jersey", "Delaware", "Maryland"]
+    elsif input == "Northwest"
+      region_array = ["Washington", "Oregon", "Idaho"]
     else input == "West"
-      region_array = ["Washington", "California", "Oregon", "Nevada"]
+      region_array = ["California", "Nevada"]
     end
     region_array
   end
@@ -139,19 +144,26 @@ class City
     Scraper.generate_state_urls(input)
   end
 
+  def self.pick_state
+    puts "Type in the name or abbreviation of the state you want to start your search in."
+    input = gets.strip
+  end
+
   def self.population_search_message(input)
     if input == "1"
       puts "With a population greater than 150,000 residents..."
       3.times { fake_delay }
     elsif input == "2"
-      puts "With a population between 50,000 and 150,0000 residents..."
+      puts "With a population between 100,000 and 150,0000 residents..."
       3.times { fake_delay }
     elsif input == "3"
-      puts "With a population between 10,000 and 50,0000 residents..."
+      puts "With a population between 50,000 and 100,0000 residents..."
       3.times { fake_delay }
     elsif input == "4"
-      puts "With a population between 2,000 and 10,000 residents..."
+      puts "With a population between 25,000 and 50,000 residents..."
       3.times { fake_delay }
+    elsif input == "5"
+      puts "With a population between 2,000 and 25,000 residents..."
     else
       puts "With a population less than 2,000 residents..."
       3.times { fake_delay }

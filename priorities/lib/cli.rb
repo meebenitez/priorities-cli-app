@@ -79,7 +79,7 @@ puts "(please enter 1, 2, 3, 4, or 5)".green
   end
 
 
-  def pick_priority #puts "Please choose a priority (type 1 - #{@priorities.count})"
+  def pick_priority
     if @@priorities.count > 1
     @@priorities.each_with_index { |priority, index| puts "#{index + 1}. #{priority}" }
     input = gets.strip.to_i
@@ -99,9 +99,9 @@ puts "(please enter 1, 2, 3, 4, or 5)".green
     if priority == "Weather"
       City.check_weather
     elsif priority == "Home Affordability"
-      City.check_affordability
       3.times { City.fake_delay }
       puts "Finding cities where the average home price fits your budget."
+      City.check_affordability
     elsif priority == "Job Market Health"
       puts nil
     elsif priority == "School Quality"

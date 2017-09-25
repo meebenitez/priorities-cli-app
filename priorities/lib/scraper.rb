@@ -35,9 +35,9 @@ class Scraper
 
 
   def self.grab_home_prices(index_url)
-    res = Net::HTTP.get_response(URI.parse(index_url))
+    result = Net::HTTP.get_response(URI.parse(index_url))
     #if it returns a good code
-    if res.code.to_i >= 200 && res.code.to_i < 400
+    if result.code.to_i >= 200 && result.code.to_i < 400
       doc = Nokogiri::HTML(open(index_url))
       price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
     else
