@@ -7,16 +7,11 @@ class Scraper
 
 
 
-  def self.generate_state_urls(input)
-    url_hash = {}
-    City.regions(input).each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
-#    binding.pry
-    url_hash
+  def self.generate_state_urls(state)
+    url_hash = { state => create_worldpop_url(state)}
   end
 
-
   def self.grab_cities(url_hash)
-#    def self.grab_cities(url_hash)
     #return hash of cities
     cities = {}
     url_hash.each do |state, state_url|
@@ -39,22 +34,36 @@ class Scraper
         counter += 1
       end
     end
-#    binding.pry
+    #binding.pry
       cities
   end
 
-
-
   def self.grab_home_prices(index_url)
-    result = Net::HTTP.get_response(URI.parse(index_url))
-    #if it returns a good code
-    if result.code.to_i >= 200 && result.code.to_i < 400
+    begin
       doc = Nokogiri::HTML(open(index_url))
       price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
-    else
-      puts index_url
+    rescue OpenURI::HTTPError => e
+      if e.message == '404 Not Found'
+        puts index_url
+      else
+        raise e
+      end
     end
+    price
   end
+
+  #def self.grab_home_prices(index_url)
+  #  result = Net::HTTP.get_response(URI.parse(index_url))
+    #if it returns a good code
+  #  if result.code.to_i >= 200 && result.code.to_i < 400
+  #    doc = Nokogiri::HTML(open(index_url))
+  #    price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
+  #  else
+  #    puts index_url
+  #  end
+    #binding.pry
+  #  price
+  #end
 
   def self.grab_diversity(index_url)
     #us average of white people is 63%
@@ -120,6 +129,14 @@ class Scraper
       #  binding.pry
   end
 
+####################REGION CODE############################
+#def self.generate_state_urls(input)
+#  url_hash = {}
+#  City.regions(input).each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
+  #binding.pry
+#  url_hash
+#end
+#############################################################
 
 
 end

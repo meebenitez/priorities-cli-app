@@ -57,21 +57,12 @@ class City
                   "Wyoming" => "WY"
                 }
 
-  @@regions = [ ["Northwest", "WA, OR, ID"],
-                ["West", "CA, NV"],
-                ["Northern Rockies and Plains", "MT, WY, ND, SD, NE"],
-                ["Southwest", "UT, CO, NM, AZ"],
-                ["South", "TX, OK, KS, MS, AR, LA"],
-                ["Upper Midwest", "MN, IA, WI, MI"],
-                ["Central", "MO, IL, IN, OH, KY, TN, WV"],
-                ["Northeast", "ME, NH, VT, MA, RI, NY, CT, PA, NJ, DE, MD"],
-                ["Southeast", "AL, GA, FL, SC, NC, VA"]
-                ]
 
   @@population_choices = {"Big City" => {greater_than: 149999, less_than: 10000000, description: "pop. 150K+"},
-                          "Medium Big City" => {greater_than: 74999, less_than: 150000, description: "pop. 75K to 150K"},
-                          "Medium City" => {greater_than: 34999, less_than: 75000, description: "pop. 35K to 75K"},
-                          "Small City" => {greater_than: 9999, less_than: 35000, description: "pop. 10K to 35K"},
+                          "Medium Big City" => {greater_than: 99999, less_than: 150000, description: "pop. 100K to 150K"},
+                          "Medium City" => {greater_than: 49999, less_than: 100000, description: "pop. 50K to 100K"},
+                          "Medium Small City" => {greater_than: 24999, less_than: 50000, description: "pop. 25K to 50K"},
+                          "Small City" => {greater_than: 9999, less_than: 25000, description: "pop. 25K to 50K"},
                           "Small Town" => {greater_than: 999, less_than: 10000, description: "pop. 1K to 10K"},
                           "Tiny" => {greater_than: 0, less_than: 1000, description: "pop. < 1K"}
                           }
@@ -84,31 +75,6 @@ class City
     @@all
   end
 
-
-
-  def self.regions(input) #return the states for the region the user has picked
-    region_array = []
-    if input == "Northern Rockies and Plains"
-      region_array = ["Montana", "Wyoming", "North Dakota", "South Dakota", "Nebraska"]
-    elsif input == "Southwest"
-      region_array = ["Utah", "Colorado", "New Mexico", "Arizona"]
-    elsif input == "South"
-      region_array = ["Texas", "Oklahoma", "Kansas", "Mississippi", "Arkansas", "Louisiana"]
-    elsif input == "Southeast"
-      region_array = ["Alabama", "Georgia", "Florida", "South Carolina", "North Carolina", "Virginia"]
-    elsif input == "Upper Midwest"
-      region_array = ["Minnesota", "Iowa", "Wisconsin", "Michigan"]
-    elsif input == "Central"
-      region_array = ["Missouri", "Illinois", "Indiana", "Ohio", "Kentucky", "Tennessee", "West Virginia"]
-    elsif input == "Northeast"
-      region_array = ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "New York", "Connecticut", "Pennsylvania", "New Jersey", "Delaware", "Maryland"]
-    elsif input == "Northwest"
-      region_array = ["Washington", "Oregon", "Idaho"]
-    else
-      region_array = ["California", "Nevada"]
-    end
-    region_array
-  end
 
   def self.on_count #grab count of all cities with power_switch turned "on"
     count = 0
@@ -139,79 +105,104 @@ class City
     city_obj.state_short = STATE_HASH[cities_hash[city[0]][:state_name]]
     city_obj.power_switch = "on"
     @@all << city_obj
+    #binding.pry
   end
 
   def self.pick_population
-    puts "To help me narrow down that search, please tell me what size city you want to live in...".green
+    puts "Now tell me what size city you want to live in...".green
     puts " "
     @@population_choices.each_with_index { |choice, index| puts "#{index +1}. #{choice[0]} (#{@@population_choices[choice[0]][:description]})".blue }
     input = numbered_input_validator(@@population_choices.length)
     input = input.to_i - 1
     input = @@population_choices.keys[input]
+  #  binding.pry
     input
   end
 
 
-
-  def self.pick_region #ask the user to pick a region
-    puts "And which region of the US do you want to start your search in?".green
-    @@regions.each_with_index { |region, index| puts "#{index + 1}. #{region[0]} (#{region[1]})".blue }
-    input = numbered_input_validator(@@regions.count)
-    input = input.to_i - 1
-    input = @@regions[input][0]
-    #5.times { fake_delay }
-    puts "Searching for cities in the #{input} region of the United States..."
-    #3.times { fake_delay }
-    Scraper.generate_state_urls(input)
-  end
-
   def self.pick_state
-    puts "Type in the name or abbreviation of the state you want to start your search in."
-    input = gets.strip
-  end
+    puts "First, tell me which state would you like to focus your search in?".green
+    input = state_input_validator
+    Scraper.generate_state_urls(input)
+end
 
-  def self.population_search_message(input)
+def self.state_input_validator
+  puts "(Please type in the FULL NAME of a state.)".green
+  input = gets.strip
+  input = input.split(' ').map {|w| w.capitalize }.join(' ')
+  STATE_HASH.has_key?(input) ? state = input : state_input_validator
+end
+
+
+  def self.population_search_message(input, state)
     if input == "Big City"
+      3.times { fake_delay }
+      puts "Finding cities in #{state.keys[0]}..."
+      3.times {fake_delay}
       puts "With a population greater than 150,000 residents..."
-      #3.times { fake_delay }
+      3.times { fake_delay }
     elsif input == "Medium Big City"
+      3.times { fake_delay }
+      puts "Finding cities in #{state.keys[0]}..."
+      3.times {fake_delay}
       puts "With a population between 100,000 and 150,000 residents..."
-      #3.times { fake_delay }
+      3.times { fake_delay }
     elsif input == "Medium City"
+      3.times { fake_delay }
+      puts "Finding cities in #{state.keys[0]}..."
+      3.times {fake_delay}
       puts "With a population between 50,000 and 100,000 residents..."
-      #3.times { fake_delay }
+      3.times { fake_delay }
+    elsif input == "Medium Small City"
+      3.times { fake_delay }
+      puts "Finding cities in #{state.keys[0]}..."
+      3.times {fake_delay}
+      puts "With a population between 25,000 and 50,000 residents..."
+      3.times { fake_delay }
     elsif input == "Small City"
-      puts "With a population between 30,000 and 50,000 residents..."
+      3.times { fake_delay }
+      puts "Finding cities in #{state.keys[0]}..."
+      3.times {fake_delay}
+      puts "With a population between 10,000 and 25,000 residents..."
+      3.times {fake_delay}
     elsif input == "Small Town"
-      puts "Test"
+      3.times { fake_delay }
+      puts "Finding cities in #{state.keys[0]}..."
+      3.times {fake_delay}
+      puts "With a population between 1,000 and 10,000 residents..."
+      3.times {fake_delay}
     else
+      3.times { fake_delay }
       puts "With a population less than 1,000 residents..."
-      #3.times { fake_delay }
+      3.times { fake_delay }
     end
   end
 
-  def self.check_population #ask the user to pick a population, and then narrow down the results
+  def self.check_population(state) #ask the user to pick a population, and then narrow down the results
     input = self.pick_population
     cities_hash = {}
-    cities_hash = Scraper.grab_cities(pick_region)#grab urls to iterate through based on user's "region" pick
-    #puts cities_hash.count
-    population_search_message(input)
+    cities_hash = Scraper.grab_cities(state)#grab urls to iterate through based on user's "region" pick
+    population_search_message(input, state)
     cities_hash.each do |city| #iterate through the grab_cities hash to generate initial data based on the user's Region pick and population choice
       population_count = cities_hash[city[0]][:population].tr(',', '').to_i
       if input == "Big City"
-        create_city(city, cities_hash) if population_count > 149999
+        create_city(city, cities_hash) if population_count > @@population_choices["Big City"][:greater_than]
       elsif input == "Medium Big City"
-        create_city(city, cities_hash) if population_count > 74999 && population_count < 150000
+        create_city(city, cities_hash) if population_count > @@population_choices["Medium Big City"][:greater_than] && population_count < @@population_choices["Medium Big City"][:less_than]
       elsif input == "Medium City"
-        create_city(city, cities_hash) if population_count > 34999 && population_count < 75000
+        create_city(city, cities_hash) if population_count > @@population_choices["Medium City"][:greater_than] && population_count < @@population_choices["Medium City"][:less_than]
+      elsif input == "Medium Small City"
+        create_city(city, cities_hash) if population_count > @@population_choices["Medium Small City"][:greater_than] && population_count < @@population_choices["Medium Small City"][:less_than]
       elsif input == "Small City"
-        create_city(city, cities_hash) if population_count > 9999 && population_count < 35000
+        create_city(city, cities_hash) if population_count > @@population_choices["Small City"][:greater_than] && population_count < @@population_choices["Small City"][:less_than]
       elsif input == "Small Town"
-        create_city(city, cities_hash) if population_count > 999 && population_count < 10000
+        create_city(city, cities_hash) if population_count > @@population_choices["Small Town"][:greater_than] && population_count < @@population_choices["Small Town"][:less_than]
       else
-        create_city(city, cities_hash) if population_count < 1000
+        create_city(city, cities_hash) if population_count < @@population_choices["Tiny"][:less_than]
       end
     end
+    @@population_choices.delete(input)
+    #binding.pry
   end
 
   def self.turn_city_off(city) #Switch a city's power_switch to "off" if they don't meet the criteria of the user's priority pick
@@ -223,8 +214,10 @@ class City
   def self.check_affordability
     user_budget = input_price_validator.to_i + 1 #grab the user's budget
     @@all.each do |city|
+      puts "....searching"
       home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name, city.state_short))
       unless home_price == nil
+        puts "......."
         home_price.gsub(/[$,mM]/, '').to_i < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
       end
     end
@@ -322,6 +315,56 @@ end
     sleep(0.5)
   end
 
+
+##########################REGION CODE############################
+
+#def self.pick_region #ask the user to pick a region
+#  puts "And which region of the US do you want to start your search in?".green
+#  @@regions.each_with_index { |region, index| puts "#{index + 1}. #{region[0]} (#{region[1]})".blue }
+#  input = numbered_input_validator(@@regions.count)
+#  input = input.to_i - 1
+#  input = @@regions[input][0]
+#  puts "Searching for cities in the #{input} region of the United States..."
+#  Scraper.generate_state_urls(input)
+#end
+
+
+#@@regions = [ ["Northwest", "WA, OR, ID"],
+#              ["West", "CA, NV"],
+#              ["Northern Rockies and Plains", "MT, WY, ND, SD, NE"],
+#              ["Southwest", "UT, CO, NM, AZ"],
+#              ["South", "TX, OK, KS, MS, AR, LA"],
+#              ["Upper Midwest", "MN, IA, WI, MI"],
+#              ["Central", "MO, IL, IN, OH, KY, TN, WV"],
+#              ["Northeast", "ME, NH, VT, MA, RI, NY, CT, PA, NJ, DE, MD"],
+#              ["Southeast", "AL, GA, FL, SC, NC, VA"]
+#              ]
+
+#def self.regions(input) #return the states for the region the user has picked
+#  region_array = []
+#  if input == "Northern Rockies and Plains"
+#    region_array = ["Montana", "Wyoming", "North Dakota", "South Dakota", "Nebraska"]
+#  elsif input == "Southwest"
+#    region_array = ["Utah", "Colorado", "New Mexico", "Arizona"]
+#  elsif input == "South"
+#    region_array = ["Texas", "Oklahoma", "Kansas", "Mississippi", "Arkansas", "Louisiana"]
+#  elsif input == "Southeast"
+#    region_array = ["Alabama", "Georgia", "Florida", "South Carolina", "North Carolina", "Virginia"]
+#  elsif input == "Upper Midwest"
+#    region_array = ["Minnesota", "Iowa", "Wisconsin", "Michigan"]
+#  elsif input == "Central"
+#    region_array = ["Missouri", "Illinois", "Indiana", "Ohio", "Kentucky", "Tennessee", "West Virginia"]
+#  elsif input == "Northeast"
+#    region_array = ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "New York", "Connecticut", "Pennsylvania", "New Jersey", "Delaware", "Maryland"]
+#  elsif input == "Northwest"
+#    region_array = ["Washington", "Oregon", "Idaho"]
+#  else
+#    region_array = ["California", "Nevada"]
+#  end
+#  region_array
+#end
+
+#################################################################
 
 
 
