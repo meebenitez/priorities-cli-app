@@ -62,7 +62,7 @@ class City
                 }
 
 
-  @@population_choices = {"Big City" => {greater_than: 149999, less_than: 10000000, description: "pop. 150K+", wait_message: "With a population greater than 150,000 residents..."},
+  POPULATION_CHOICES = {"Big City" => {greater_than: 149999, less_than: 10000000, description: "pop. 150K+", wait_message: "With a population greater than 150,000 residents..."},
                           "Medium Big City" => {greater_than: 99999, less_than: 150000, description: "pop. 100K to 150K", wait_message: "With a population between 100,000 and 150,000 residents..."},
                           "Medium City" => {greater_than: 49999, less_than: 100000, description: "pop. 50K to 100K", wait_message: "With a population between 50,000 and 100,000 residents..."},
                           "Medium Small City" => {greater_than: 24999, less_than: 50000, description: "pop. 25K to 50K", wait_message: "With a population between 25,000 and 50,000 residents..."},
@@ -83,10 +83,10 @@ class City
   def self.pick_population
     puts "Now tell me what size city you want to live in...".green
     puts " "
-    @@population_choices.each_with_index { |choice, index| puts "#{index +1}. #{choice[0]} (#{@@population_choices[choice[0]][:description]})".blue }
-    input = numbered_input_validator(@@population_choices.length)
+    POPULATION_CHOICES.each_with_index { |choice, index| puts "#{index +1}. #{choice[0]} (#{POPULATION_CHOICES[choice[0]][:description]})".blue }
+    input = numbered_input_validator(POPULATION_CHOICES.length)
     input = input.to_i - 1
-    input = @@population_choices.keys[input]
+    input = POPULATION_CHOICES.keys[input]
   #  binding.pry
     input
   end
@@ -100,22 +100,22 @@ class City
     cities_hash.each do |city| #iterate through the grab_cities hash to generate initial data based on the user's Region pick and population choice
       population_count = cities_hash[city[0]][:population].tr(',', '').to_i
       if input == "Big City"
-        create_city(city, cities_hash) if population_count > @@population_choices["Big City"][:greater_than]
+        create_city(city, cities_hash) if population_count > POPULATION_CHOICES["Big City"][:greater_than]
       elsif input == "Medium Big City"
-        create_city(city, cities_hash) if population_count > @@population_choices["Medium Big City"][:greater_than] && population_count < @@population_choices["Medium Big City"][:less_than]
+        create_city(city, cities_hash) if population_count > POPULATION_CHOICES["Medium Big City"][:greater_than] && population_count < POPULATION_CHOICES["Medium Big City"][:less_than]
       elsif input == "Medium City"
-        create_city(city, cities_hash) if population_count > @@population_choices["Medium City"][:greater_than] && population_count < @@population_choices["Medium City"][:less_than]
+        create_city(city, cities_hash) if population_count > POPULATION_CHOICES["Medium City"][:greater_than] && population_count < POPULATION_CHOICES["Medium City"][:less_than]
       elsif input == "Medium Small City"
-        create_city(city, cities_hash) if population_count > @@population_choices["Medium Small City"][:greater_than] && population_count < @@population_choices["Medium Small City"][:less_than]
+        create_city(city, cities_hash) if population_count > POPULATION_CHOICES["Medium Small City"][:greater_than] && population_count < POPULATION_CHOICES["Medium Small City"][:less_than]
       elsif input == "Small City"
-        create_city(city, cities_hash) if population_count > @@population_choices["Small City"][:greater_than] && population_count < @@population_choices["Small City"][:less_than]
+        create_city(city, cities_hash) if population_count > POPULATION_CHOICES["Small City"][:greater_than] && population_count < POPULATION_CHOICES["Small City"][:less_than]
       elsif input == "Small Town"
-        create_city(city, cities_hash) if population_count > @@population_choices["Small Town"][:greater_than] && population_count < @@population_choices["Small Town"][:less_than]
+        create_city(city, cities_hash) if population_count > POPULATION_CHOICES["Small Town"][:greater_than] && population_count < POPULATION_CHOICES["Small Town"][:less_than]
       else
-        create_city(city, cities_hash) if population_count < @@population_choices["Tiny"][:less_than]
+        create_city(city, cities_hash) if population_count < POPULATION_CHOICES["Tiny"][:less_than]
       end
     end
-    @@population_choices.delete(input)
+    POPULATION_CHOICES.delete(input)
     #binding.pry
   end
 
@@ -131,12 +131,12 @@ class City
   end
 
   def self.population_search_message(input, state)
-    @@population_choices.each do |choice, index|
+    POPULATION_CHOICES.each do |choice, index|
       if input == choice
         3.times { fake_delay }
         puts "Finding cities in #{state.keys[0]}..."
         3.times { fake_delay }
-        puts @@population_choices[choice][:wait_message]
+        puts POPULATION_CHOICES[choice][:wait_message]
         3.times { fake_delay }
       end
     end
@@ -149,6 +149,8 @@ class City
 #-------------HOME AFFODABILITY-----------------------
   def self.check_affordability
     user_budget = input_price_validator.to_i + 1 #grab the user's budget
+    3.times {fake_delay}
+    puts "Finding cities where the average home price fits your budget..."
     @@all.each do |city|
       puts "....searching"
       home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name, city.state_short))
@@ -157,7 +159,6 @@ class City
         home_price.gsub(/[$,mM]/, '').to_i < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
       end
     end
-    binding.pry
 
   end
 

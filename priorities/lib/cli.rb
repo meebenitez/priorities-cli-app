@@ -6,7 +6,7 @@ class Priorities::CLI
 
 attr_accessor :last_priority, :priorities
 
-@@priorities = ["Weather", "School Quality", "Home Affordability", "Job Market Health", "Safety", "Racial Diversity", "Political Climate"]
+PRIORITIES = ["Weather", "School Quality", "Home Affordability", "Job Market Health", "Safety", "Racial Diversity", "Political Climate"]
 @@priority_pick_order = []
 
 @@counter = 0
@@ -72,13 +72,13 @@ DOC
 #######################PRIORITY LOGIC##############################
 
   def pick_priority(state)
-    if @@priorities.count > 1
-    @@priorities.each_with_index { |priority, index| puts "#{index + 1}. #{priority}" }
+    if PRIORITIES.count > 1
+    PRIORITIES.each_with_index { |priority, index| puts "#{index + 1}. #{priority}" }
     input = gets.strip.to_i
     input = input - 1
-    priority = @@priorities[input]
+    priority = PRIORITIES[input]
     run_priority_check(priority)
-    @@priorities.delete(priority)
+    PRIORITIES.delete(priority)
     @@priority_pick_order << priority
     results_check(state)
     else
@@ -113,20 +113,8 @@ DOC
   end
 
   def priorities_reset
-    @@priorities.reset!
+    PRIORITIES.reset!
   end
-
-#  def priority_descriptions(priority, extra = nil) #["Weather", "School Quality", "Home Affordability", "Job Market Health", "Safety", "Racial Diversity", "Political Climate"]
-#      if priority == "Weather"
-#        4.times { City.fake_delay }
-#        puts "Finding #{extra} cities for you"
-#        4.times { City.fake_delay }
-#      elsif priority == "School Quality"
-#        4.times { City.fake_delay }
-#        puts "Finding Schools "
-
-
-#  end
 
 #########################RESULTS AND OUTPUT#################################
 
