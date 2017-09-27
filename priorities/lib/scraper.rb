@@ -6,13 +6,54 @@ class Scraper
 
 
 
-
-  def self.generate_state_urls(state)
+##################GENERATING URLS###########################
+  def self.create_state_urls(state)
     url_hash = { state => create_worldpop_url(state)}
   end
 
-  def self.grab_cities(url_hash)
-    #return hash of cities
+  def self.create_datausa_url(city_name, state_short)
+    city_name = check_and_convert_name_dash(city_name)
+    data_url = "https://datausa.io/profile/geo/#{city_name.downcase}-#{state_short.downcase}/"
+    #binding.pry
+    data_url
+  end
+
+  def self.create_worldpop_url(state_name)
+    state_name = check_and_convert_name_dash(state_name)
+    data_url = "http://worldpopulationreview.com/states/#{state_name.downcase}-population/cities/"
+    data_url
+      #  binding.pry
+  end
+
+  def self.create_greatschools_url(city_name, state_long)
+    city_name = check_and_convert_name_underscore(city_name)
+    data_url = "https://www.greatschools.org/#{state_long.downcase}/#{city_name.downcase}/"
+    data_url
+  end
+
+
+#--------------FORMATTING HELP---------------
+
+  def self.check_and_convert_name_dash(name)
+    name = name.gsub(' ', '-') if name.include?(" ")
+    name
+  end
+
+  def self.check_and_convert_name_underscore(name)
+    if name.include?(" ")
+      name = name.gsub!(' ', '-')
+    elsif name.include?("-")
+      name = name.gsub!(' ', '_')
+    else
+      name
+    end
+    name
+  end
+
+
+##################SCRAPING##############################
+
+  def self.grab_cities(url_hash)#and populations
     cities = {}
     url_hash.each do |state, state_url|
       #binding.pry
@@ -52,18 +93,6 @@ class Scraper
     price
   end
 
-  #def self.grab_home_prices(index_url)
-  #  result = Net::HTTP.get_response(URI.parse(index_url))
-    #if it returns a good code
-  #  if result.code.to_i >= 200 && result.code.to_i < 400
-  #    doc = Nokogiri::HTML(open(index_url))
-  #    price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
-  #  else
-  #    puts index_url
-  #  end
-    #binding.pry
-  #  price
-  #end
 
   def self.grab_diversity(index_url)
     #us average of white people is 63%
@@ -92,45 +121,13 @@ class Scraper
     #school_rating =
   end
 
-  def self.check_and_convert_name_dash(name)
-    name = name.gsub(' ', '-') if name.include?(" ")
-    name
-  end
-
-  def self.check_and_convert_name_underscore(name)
-    if name.include?(" ")
-      name = name.gsub!(' ', '-')
-    elsif name.include?("-")
-      name = name.gsub!(' ', '_')
-    else
-      name
-    end
-    name
-  end
-
-  def self.create_greatschools_url(city_name, state_long)
-    city_name = check_and_convert_name_underscore(city_name)
-    data_url = "https://www.greatschools.org/#{state_long.downcase}/#{city_name.downcase}/"
-    data_url
-  end
 
 
-  def self.create_datausa_url(city_name, state_short)
-    city_name = check_and_convert_name_dash(city_name)
-    data_url = "https://datausa.io/profile/geo/#{city_name.downcase}-#{state_short.downcase}/"
-    #binding.pry
-    data_url
-  end
 
-  def self.create_worldpop_url(state_name)
-    state_name = check_and_convert_name_dash(state_name)
-    data_url = "http://worldpopulationreview.com/states/#{state_name.downcase}-population/cities/"
-    data_url
-      #  binding.pry
-  end
+
 
 ####################REGION CODE############################
-#def self.generate_state_urls(input)
+#def self.create_state_urls(input)
 #  url_hash = {}
 #  City.regions(input).each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
   #binding.pry

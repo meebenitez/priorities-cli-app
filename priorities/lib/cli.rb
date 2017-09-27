@@ -69,6 +69,8 @@ DOC
   end
 
 
+#######################PRIORITY LOGIC##############################
+
   def pick_priority(state)
     if @@priorities.count > 1
     @@priorities.each_with_index { |priority, index| puts "#{index + 1}. #{priority}" }
@@ -126,16 +128,7 @@ DOC
 
 #  end
 
-
-
-  def display_results_short(cities_hash)
-    cities_hash.each do |city, attribute|
-      puts city.red
-      attribute.each do |key, value|
-          puts "#{key}: #{value}".magenta
-      end
-    end
-  end
+#########################RESULTS AND OUTPUT#################################
 
   def results_check(state)
     if City.on_count > 5
@@ -176,5 +169,15 @@ DOC
       end
     end
   end
+
+  def display_results_short(cities_hash)
+    cities_hash.each do |city, attribute|
+      puts city.red
+      attribute.each do |key, value|
+          puts "#{key}: #{value}".magenta
+      end
+    end
+  end
+
 
 end

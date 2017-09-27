@@ -5,6 +5,10 @@ class City
 
   attr_accessor :name, :avg_home_price, :diversity_percent, :population, :crime_index, :school_score, :power_switch, :state_short, :state_long, :bio
 
+  @@all = []
+
+  @@turned_off = []
+
   STATE_HASH = {  "Alabama" => "AL",
                   "Alaska" => "AK",
                   "Arizona" => "AZ",
@@ -58,55 +62,23 @@ class City
                 }
 
 
-  @@population_choices = {"Big City" => {greater_than: 149999, less_than: 10000000, description: "pop. 150K+"},
-                          "Medium Big City" => {greater_than: 99999, less_than: 150000, description: "pop. 100K to 150K"},
-                          "Medium City" => {greater_than: 49999, less_than: 100000, description: "pop. 50K to 100K"},
-                          "Medium Small City" => {greater_than: 24999, less_than: 50000, description: "pop. 25K to 50K"},
-                          "Small City" => {greater_than: 9999, less_than: 25000, description: "pop. 25K to 50K"},
-                          "Small Town" => {greater_than: 999, less_than: 10000, description: "pop. 1K to 10K"},
-                          "Tiny" => {greater_than: 0, less_than: 1000, description: "pop. < 1K"}
+  @@population_choices = {"Big City" => {greater_than: 149999, less_than: 10000000, description: "pop. 150K+", wait_message: "With a population greater than 150,000 residents..."},
+                          "Medium Big City" => {greater_than: 99999, less_than: 150000, description: "pop. 100K to 150K", wait_message: "With a population between 100,000 and 150,000 residents..."},
+                          "Medium City" => {greater_than: 49999, less_than: 100000, description: "pop. 50K to 100K", wait_message: "With a population between 50,000 and 100,000 residents..."},
+                          "Medium Small City" => {greater_than: 24999, less_than: 50000, description: "pop. 25K to 50K", wait_message: "With a population between 25,000 and 50,000 residents..."},
+                          "Small City" => {greater_than: 9999, less_than: 25000, description: "pop. 10K to 25K", wait_message: "With a population between 10,000 and 25,000 residents..."},
+                          "Small Town" => {greater_than: 999, less_than: 10000, description: "pop. 1K to 10K", wait_message: "With a population between 1,000 and 10,000 residents..."},
+                          "Tiny" => {greater_than: 0, less_than: 1000, description: "pop. < 1K", wait_message: "With a population less than 1,000 residents..."}
                           }
 
-  @@all = []
 
-  @@turned_off = []
-
-  def self.all
-    @@all
+####################CREATE INITIAL LIST OF CITIES#############################
+  def self.pick_state
+    puts "First, tell me which state would you like to focus your search in?".green
+    input = state_input_validator
+    Scraper.create_state_urls(input)
   end
 
-
-  def self.on_count #grab count of all cities with power_switch turned "on"
-    count = 0
-    @@all.each do |city|
-      count += 1 if city.power_switch == "on"
-    end
-    count
-  end
-
-  def self.reset_last #turn city's that were just turned "off,"" back to "on"
-    @@turned_off.each { |city| city.power_switch = "on" }
-  end
-
-  def self.destroy_turned_off #destroy memory of turned "off" cities
-    @@turned_off.clear
-  end
-
-  def self.generate_state_short(state_name)
-    short_name = STATE_HASH(state_name)
-    short_name
-  end
-
-  def self.create_city(city, cities_hash) #initializing attr_accessors first grab of cities
-    city_obj = self.new
-    city_obj.name = city[0]
-    city_obj.population = cities_hash[city[0]][:population]
-    city_obj.state_long = cities_hash[city[0]][:state_name]
-    city_obj.state_short = STATE_HASH[cities_hash[city[0]][:state_name]]
-    city_obj.power_switch = "on"
-    @@all << city_obj
-    #binding.pry
-  end
 
   def self.pick_population
     puts "Now tell me what size city you want to live in...".green
@@ -119,64 +91,6 @@ class City
     input
   end
 
-
-  def self.pick_state
-    puts "First, tell me which state would you like to focus your search in?".green
-    input = state_input_validator
-    Scraper.generate_state_urls(input)
-end
-
-def self.state_input_validator
-  puts "(Please type in the FULL NAME of a state.)".green
-  input = gets.strip
-  input = input.split(' ').map {|w| w.capitalize }.join(' ')
-  STATE_HASH.has_key?(input) ? state = input : state_input_validator
-end
-
-
-  def self.population_search_message(input, state)
-    if input == "Big City"
-      3.times { fake_delay }
-      puts "Finding cities in #{state.keys[0]}..."
-      3.times {fake_delay}
-      puts "With a population greater than 150,000 residents..."
-      3.times { fake_delay }
-    elsif input == "Medium Big City"
-      3.times { fake_delay }
-      puts "Finding cities in #{state.keys[0]}..."
-      3.times {fake_delay}
-      puts "With a population between 100,000 and 150,000 residents..."
-      3.times { fake_delay }
-    elsif input == "Medium City"
-      3.times { fake_delay }
-      puts "Finding cities in #{state.keys[0]}..."
-      3.times {fake_delay}
-      puts "With a population between 50,000 and 100,000 residents..."
-      3.times { fake_delay }
-    elsif input == "Medium Small City"
-      3.times { fake_delay }
-      puts "Finding cities in #{state.keys[0]}..."
-      3.times {fake_delay}
-      puts "With a population between 25,000 and 50,000 residents..."
-      3.times { fake_delay }
-    elsif input == "Small City"
-      3.times { fake_delay }
-      puts "Finding cities in #{state.keys[0]}..."
-      3.times {fake_delay}
-      puts "With a population between 10,000 and 25,000 residents..."
-      3.times {fake_delay}
-    elsif input == "Small Town"
-      3.times { fake_delay }
-      puts "Finding cities in #{state.keys[0]}..."
-      3.times {fake_delay}
-      puts "With a population between 1,000 and 10,000 residents..."
-      3.times {fake_delay}
-    else
-      3.times { fake_delay }
-      puts "With a population less than 1,000 residents..."
-      3.times { fake_delay }
-    end
-  end
 
   def self.check_population(state) #ask the user to pick a population, and then narrow down the results
     input = self.pick_population
@@ -205,12 +119,34 @@ end
     #binding.pry
   end
 
-  def self.turn_city_off(city) #Switch a city's power_switch to "off" if they don't meet the criteria of the user's priority pick
-    city.power_switch = "off"
-    #Log that this city was turned off, just in case we need to reverse the action
-    @@turned_off << city
+  def self.create_city(city, cities_hash) #initializing attr_accessors first grab of cities
+    city_obj = self.new
+    city_obj.name = city[0]
+    city_obj.population = cities_hash[city[0]][:population]
+    city_obj.state_long = cities_hash[city[0]][:state_name]
+    city_obj.state_short = STATE_HASH[cities_hash[city[0]][:state_name]]
+    city_obj.power_switch = "on"
+    @@all << city_obj
+    #binding.pry
   end
 
+  def self.population_search_message(input, state)
+    @@population_choices.each do |choice, index|
+      if input == choice
+        3.times { fake_delay }
+        puts "Finding cities in #{state.keys[0]}..."
+        3.times { fake_delay }
+        puts @@population_choices[choice][:wait_message]
+        3.times { fake_delay }
+      end
+    end
+  end
+
+
+
+############PRIORITY CHECKS##############################################
+
+#-------------HOME AFFODABILITY-----------------------
   def self.check_affordability
     user_budget = input_price_validator.to_i + 1 #grab the user's budget
     @@all.each do |city|
@@ -223,6 +159,7 @@ end
     end
   end
 
+#-------------DIVERSITY-----------------------
   def self.check_diversity
     @@all.each do |city|
       total_population = city.population.tr(',', '').to_i### total population
@@ -235,11 +172,12 @@ end
     end
   end
 
-  def self.diversity_percentage(total_population, white_population)
+  def self.diversity_percentage(total_population, white_population) #gets percentage of non-white residents
     percent = (white_population * 100) / total_population
     percent = 100 - percent
     percent
   end
+#---------------SAFETY----------------------
 
   def check_safety
     #safety rating under 2000 is safe
@@ -254,8 +192,41 @@ end
     end
   end
 
-  def self.create_display_hash
-    #generate what the user sees after their search is narrowed down to 5 cities or less
+#########################HELPERS#############################
+
+def self.all
+  @@all
+end
+
+
+def self.on_count #grab count of all cities with power_switch turned "on"
+  count = 0
+  @@all.each do |city|
+    count += 1 if city.power_switch == "on"
+  end
+  count
+end
+
+def self.turn_city_off(city) #Switch a city's power_switch to "off" if they don't meet the criteria of the user's priority pick
+  city.power_switch = "off"
+  #Log that this city was turned off, just in case we need to reverse the action
+  @@turned_off << city
+end
+
+def self.reset_last #turn city's that were just turned "off," back to "on"
+  @@turned_off.each { |city| city.power_switch = "on" }
+end
+
+def self.destroy_turned_off #destroy memory of turned "off" cities
+  @@turned_off.clear
+end
+
+def self.create_state_short(state_name)
+  short_name = STATE_HASH(state_name)
+  short_name
+end
+
+  def self.create_display_hash #generate hash that's pushed to CLI display results
     display_hash = Hash.new do |hash, key|
       hash[key] = {}
     end
@@ -273,6 +244,20 @@ end
     display_hash
   end
 
+  def self.fake_delay
+    puts "............."
+    sleep(0.5)
+  end
+
+#--------------------------INPUT VALIDATORS---------------------------
+
+def self.state_input_validator
+  puts "(Please type in the FULL NAME of a state.)".green
+  input = gets.strip
+  input = input.split(' ').map {|w| w.capitalize }.join(' ')
+  STATE_HASH.has_key?(input) ? state = input : state_input_validator
+end
+
   def self.numbered_input_validator(num_options)#returns valid numbered input
     input = gets.strip
     valid_options = (1..num_options).to_a
@@ -282,8 +267,6 @@ end
       puts "That's not a valid number.  Please enter a number between #{valid_options[0]} and #{valid_options[num_options - 1]}."
       numbered_input_validator(num_options)
     end
-    #binding.pry
-    #valid_input
   end
 
   def self.yes_no_input_validator
@@ -294,7 +277,6 @@ end
     else
       valid_input = "no"
     end
-      valid_input
   end
 
   def self.input_price_validator
@@ -306,14 +288,9 @@ end
     yes_no_input_validator == "yes" ? input : input_price_validator
   end
 
-  def self.comma_numbers(number, delimiter = ',')
+  def self.comma_numbers(number, delimiter = ',')#Helps format price
   number.to_s.reverse.gsub(%r{([0-9]{3}(?=([0-9])))}, "\\1#{delimiter}").reverse
 end
-
-  def self.fake_delay
-    puts "............."
-    sleep(0.5)
-  end
 
 
 ##########################REGION CODE############################
@@ -325,7 +302,7 @@ end
 #  input = input.to_i - 1
 #  input = @@regions[input][0]
 #  puts "Searching for cities in the #{input} region of the United States..."
-#  Scraper.generate_state_urls(input)
+#  Scraper.create_state_urls(input)
 #end
 
 
