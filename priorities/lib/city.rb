@@ -207,6 +207,15 @@ def self.check_education #gets cities where the population of college grads is g
   end
 end
 
+#--------------MAJORITY VOTERS-------------------------
+#puts voters.key(voters.values.max)
+
+  def self.check_majority_voters
+    @@all.each do |city|
+      unless city.power_switch == "off"
+        voter_hash = {}
+        voter_hash = Scraper.grab_majority_voters(Scraper.create_geostat_url(city.name, city.state_short))
+
 #---------------SAFETY----------------------
 
   def check_safety

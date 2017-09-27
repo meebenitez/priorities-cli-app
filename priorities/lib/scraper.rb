@@ -87,21 +87,37 @@ class Scraper
       end
     end
 
-
-
-    def self.grab_safety(index_url="http://www.usa.com/rank/washington-state--crime-index--city-rank.htm")
-      doc = Nokogiri::HTML(open(index_url))
-      cities = {}
-      counter = 4
-      total_count = doc.css("div#hcontent").css("table").css("td").count - 1
-      until counter > total_count
-          crime_index = doc.css("div#hcontent").css("table").css("td")[counter].text
-          city_name = doc.css("div#hcontent").css("table").css("td")[counter + 1].text.gsub((/,.+/), "")
-          cities.merge!({city_name => crime_index})
-          counter += 3
+    def self.grab_majority_voters(index_url)
+      begin
+        doc = Nokogiri::HTML(open(index_url))
+        republican = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[5].text
+        democrat = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[2].text
+        independent = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[8].text
+        voter_hash = {"Republican" => republican.tr('%', '').to_i.to_f, "Democrat" => democrat.tr('%', '').to_i.to_f, "Independent" => independent.tr('%', '').to_i.to_f}
       end
-      cities
+      rescue OpenURI::HTTPError => e
+      if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
+        puts "-->"
+      else
+        raise e
+      end
     end
+
+
+
+      def self.grab_safety(index_url="http://www.usa.com/rank/washington-state--crime-index--city-rank.htm")
+        doc = Nokogiri::HTML(open(index_url))
+        cities = {}
+        counter = 4
+        total_count = doc.css("div#hcontent").css("table").css("td").count - 1
+        until counter > total_count
+            crime_index = doc.css("div#hcontent").css("table").css("td")[counter].text
+            city_name = doc.css("div#hcontent").css("table").css("td")[counter + 1].text.gsub((/,.+/), "")
+            cities.merge!({city_name => crime_index})
+            counter += 3
+        end
+        cities
+      end
 
 
 ##################GENERATING URLS###########################
@@ -135,6 +151,13 @@ class Scraper
     data_url = "http://www.city-data.com/city/#{city_name}-#{state_long}.html"
     data_url
   end
+
+  def self.create_geostat_url(city_name, state_short)
+    city_name = check_and_convert_name_dash(city_name)
+    data_url = "http://www.geostat.org/data/#{city_name}-#{state_short}/voting"
+    data_url
+  end
+
 
 #--------------FORMATTING HELP---------------
 
