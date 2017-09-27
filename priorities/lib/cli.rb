@@ -144,7 +144,7 @@ DOC
         puts "Looks like none of the cities in your current list fit that priority."
         puts "Let's choose a different one."
         City.reset_last
-        pick_priority
+        pick_priority(state)
       end
     else
       if @@counter < 1
