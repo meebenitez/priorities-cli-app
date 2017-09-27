@@ -167,7 +167,7 @@ class City
 def self.check_median_income
   @@all.each do |city|
     unless city.power_switch == "off"
-      median_income = Scraper.grab_home_prices(Scraper.create_city_data_url(city.name, city.state_long))
+      median_income = Scraper.grab_median_income(Scraper.create_city_data_url(city.name, city.state_long))
       unless median_income == nil
         median_income.gsub(/[$,mM]/, '').to_i < 55775 ? city.median_income = median_income : turn_city_off(city)
       end
