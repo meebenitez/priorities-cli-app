@@ -138,7 +138,7 @@ DOC
       end
     elsif City.on_count == 0
       if @@counter < 1
-        puts "Wow.  Looks like we couldn't find any cities that size in #{state}.  Let's try again."
+        puts "Wow.  Looks like we couldn't find any cities that size in #{state.keys[0]}.  Let's try again."
         City.check_population(state)
         results_check(state)
       else

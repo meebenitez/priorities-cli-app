@@ -168,7 +168,7 @@ def self.check_median_income
   @@all.each do |city|
     unless city.power_switch == "off"
       median_income = Scraper.grab_median_income(Scraper.create_city_data_url(city.name, city.state_long))
-      unless median_income == nil
+      if median_income
         median_income.gsub(/[$,mM]/, '').to_i < 55775 ? city.median_income = median_income : turn_city_off(city)
       end
     end
@@ -182,9 +182,10 @@ end
       total_population = city.population.tr(',', '').to_i### total population
       unless city.power_switch == "off"
         white_population = Scraper.grab_diversity(Scraper.create_datausa_url(city.name, city.state_short)).tr(',', '').to_i
-        diversity_percent = diversity_percentage(total_population, white_population)
-        #us
-        diversity_percent > 37 ? city.diversity_percent = diversity_percent : turn_city_off(city)
+        if white_population
+          diversity_percent = diversity_percentage(total_population, white_population)
+          diversity_percent > 37 ? city.diversity_percent = diversity_percent : turn_city_off(city)
+        end
       end
     end
   end
@@ -197,9 +198,11 @@ end
 #--------------EDUCATION---------------------
 def self.check_education #gets cities where the population of college grads is greater than the us avg of 21%
   @@all.each do |city|
-    rating = Scraper.grab_education(Scraper.create_city_data_url(city.name, city.state_long)).tr('%', '').to_i
     unless city.power_switch == "off"
+      rating = Scraper.grab_education(Scraper.create_city_data_url(city.name, city.state_long)).tr('%', '').to_i
+      if rating
       rating > 21 ? city.college_grad_percent = rating : turn_city_off(city)
+      end
     end
   end
 end
