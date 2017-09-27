@@ -37,7 +37,7 @@ class Scraper
     def self.grab_home_prices(index_url)
       begin
         doc = Nokogiri::HTML(open(index_url))
-        price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
+        price = doc.css("section#median-income div.hgraph").css("td")[1].text
       end
       rescue OpenURI::HTTPError => e
         if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
@@ -73,6 +73,20 @@ class Scraper
         raise e
       end
     end
+
+    def self.grab_median_income(index_url)
+      begin
+        doc = Nokogiri::HTML(open(index_url))
+        median_income = doc.css("section#median-income div.hgraph").css("td")[1].text
+      end
+    rescue OpenURI::HTTPError => e
+      if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
+        puts "-->"
+      else
+        raise e
+      end
+    end
+
 
 
     def self.grab_safety(index_url="http://www.usa.com/rank/washington-state--crime-index--city-rank.htm")

@@ -6,7 +6,7 @@ class Priorities::CLI
 
 attr_accessor :last_priority, :priorities
 
-PRIORITIES = ["Weather", "Well Educated", "Home Affordability", "Job Market Health", "Safety", "Racial Diversity", "Political Climate"]
+PRIORITIES = ["Weather", "Well Educated", "Home Affordability", "Median Income", "Safety", "Racial Diversity", "Political Climate"]
 @@priority_pick_order = []
 
 @@counter = 0
@@ -92,8 +92,11 @@ DOC
       City.check_weather
     elsif priority == "Home Affordability"
       City.check_affordability
-    elsif priority == "Job Market Health"
-      puts nil
+    elsif priority == "Median Income"
+      3.times { City.fake_delay }
+      puts "Finding cities where the Median Income is higher than the US avg of $55,775."
+      2.times { City.fake_delay }
+      City.check_median_income
     elsif priority == "Well Educated"
       3.times { City.fake_delay }
       puts "Finding cities where the percentage of college grads among residents is higher than the US avg of 21%"
@@ -105,8 +108,6 @@ DOC
       3.times { City.fake_delay }
       puts "Finding cities where the percentage of non-White residents is higher than the national average of 37%"
       2.times { City.fake_delay }
-      puts "searching..."
-      puts "searching..."
       City.check_diversity
     elsif priority == "Political Climate"
       puts nil
@@ -137,7 +138,7 @@ DOC
       end
     elsif City.on_count == 0
       if @@counter < 1
-        puts "Wow.  Looks like we couldn't find any cities that size in the state you picked.  Let's try again."
+        puts "Wow.  Looks like we couldn't find any cities that size in #{state}.  Let's try again."
         City.check_population(state)
         results_check(state)
       else
@@ -175,6 +176,8 @@ DOC
           puts "Avg. Home Price: #{value}".magenta
         elsif key == "college_grad_percent"
           puts "% of College Graduates: #{value}".magenta
+        elsif key == "median_income"
+          puts "Avg. Median Income: #{value}".magenta
         else
           puts "#{key}: #{value}".magenta
         end

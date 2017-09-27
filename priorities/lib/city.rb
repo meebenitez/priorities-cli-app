@@ -3,7 +3,7 @@ require 'colorize'
 
 class City
 
-  attr_accessor :name, :avg_home_price, :diversity_percent, :population, :crime_index, :college_grad_percent, :power_switch, :state_short, :state_long, :bio
+  attr_accessor :name, :avg_home_price, :diversity_percent, :median_income, :population, :crime_index, :college_grad_percent, :power_switch, :state_short, :state_long, :bio
 
   @@all = []
 
@@ -151,16 +151,26 @@ class City
     user_budget = input_price_validator.to_i + 1 #grab the user's budget
     3.times {fake_delay}
     puts "Finding cities where the average home price fits your budget..."
+    3.times {fake_delay}
     @@all.each do |city|
-      puts "....searching"
       home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name, city.state_short))
       unless home_price == nil
-        puts "......."
         home_price.gsub(/[$,mM]/, '').to_i < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
       end
     end
 
   end
+
+#-------------MEDIAN INCOME----------------------
+def self.check_median_income
+  @@all.each do |city|
+    median_income = Scraper.grab_home_prices(Scraper.create_city_data_url(city.name, city.state_long))
+    unless median_income == nil
+      median_income.gsub(/[$,mM]/, '').to_i < 55775 ? city.median_income = median_income : turn_city_off(city)
+    end
+  end
+
+end
 
 #-------------DIVERSITY-----------------------
   def self.check_diversity
