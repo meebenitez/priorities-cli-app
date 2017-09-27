@@ -100,7 +100,7 @@ DOC
       City.check_safety
     elsif priority == "Racial Diversity"
       3.times { City.fake_delay }
-      puts "I'm pulling cities where the percentage of non-White residents is higher than the national average of 47%"
+      puts "Finding cities where the percentage of non-White residents is higher than the national average of 37%"
       2.times { City.fake_delay }
       puts "searching..."
       puts "searching..."
@@ -164,7 +164,15 @@ DOC
     cities_hash.each do |city, attribute|
       puts city.red
       attribute.each do |key, value|
+        if key == "diversity_percent"
+          puts "% Racial Diversity: #{value}".magenta
+        elsif key == "population"
+          puts "Population: #{value}".magenta
+        elsif key == "avg_home_price"
+          puts "Avg. Home Price: #{value}".magenta
+        else
           puts "#{key}: #{value}".magenta
+        end
       end
     end
   end

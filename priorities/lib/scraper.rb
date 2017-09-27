@@ -96,10 +96,16 @@ class Scraper
 
 
   def self.grab_diversity(index_url)
-    #us average of white people is 63%
-    doc = Nokogiri::HTML(open(index_url))
-    white_population = doc.css("section.demographics.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value.stat-small span.stat-right span.stat-subtitle span.stat-span").first.text
-    white_population
+    begin
+      doc = Nokogiri::HTML(open(index_url))
+      white_population = doc.css("section.demographics.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value.stat-small span.stat-right span.stat-subtitle span.stat-span").first.text
+    end
+  rescue OpenURI::HTTPError => e
+    if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
+      puts "-->"
+    else
+      raise e
+    end
   end
 
 
