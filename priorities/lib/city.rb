@@ -3,7 +3,7 @@ require 'colorize'
 
 class City
 
-  attr_accessor :name, :avg_home_price, :diversity_percent, :median_income, :population, :crime_index, :college_grad_percent, :power_switch, :state_short, :state_long, :bio
+  attr_accessor :name, :avg_home_price, :diversity_percent, :median_income, :population, :crime_index, :college_grad_percent, :majority_vote :power_switch, :state_short, :state_long, :bio
 
   @@all = []
 
@@ -70,6 +70,8 @@ class City
                           "Small Town" => {greater_than: 999, less_than: 10000, description: "pop. 1K to 10K", wait_message: "With a population between 1,000 and 10,000 residents..."},
                           "Tiny" => {greater_than: 0, less_than: 1000, description: "pop. < 1K", wait_message: "With a population less than 1,000 residents..."}
                           }
+
+  VOTER_TYPES = ["Republican", "Democrat", "Independent"]
 
 
 ####################CREATE INITIAL LIST OF CITIES#############################
@@ -208,13 +210,20 @@ def self.check_education #gets cities where the population of college grads is g
 end
 
 #--------------MAJORITY VOTERS-------------------------
-#puts voters.key(voters.values.max)
 
   def self.check_majority_voters
+    puts "Let's find a city that matches your politics.  How do you identify yourself politically?"
+    user_input = numbered_input_validator(VOTER_TYPES.count)
     @@all.each do |city|
       unless city.power_switch == "off"
         voter_hash = {}
         voter_hash = Scraper.grab_majority_voters(Scraper.create_geostat_url(city.name, city.state_short))
+        majority_voter = voter_hash.key(voter_hash.values.max)
+        majority_voter == user_input ? city.majority_vote = majority_voter : turn_city_off(city)
+      end
+    end
+  end
+
 
 #---------------SAFETY----------------------
 
@@ -296,6 +305,8 @@ def self.state_input_validator
   input = input.split(' ').map {|w| w.capitalize }.join(' ')
   STATE_HASH.has_key?(input) ? state = input : state_input_validator
 end
+
+
 
   def self.numbered_input_validator(num_options)#returns valid numbered input
     input = gets.strip
