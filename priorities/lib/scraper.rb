@@ -37,7 +37,8 @@ class Scraper
     def self.grab_home_prices(index_url)
       begin
         doc = Nokogiri::HTML(open(index_url))
-        price = doc.css("section#median-income div.hgraph").css("td")[1].text
+#        price = doc.css("section#median-income div.hgraph").css("td")[1].text
+        doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
       end
       rescue OpenURI::HTTPError => e
         if e.message == '404 Not Found' || e.message == "404 NOT FOUND"

@@ -153,9 +153,11 @@ class City
     puts "Finding cities where the average home price fits your budget..."
     3.times {fake_delay}
     @@all.each do |city|
-      home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name, city.state_short))
-      unless home_price == nil
-        home_price.gsub(/[$,mM]/, '').to_i < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
+      unless city.power_switch == "off"
+        home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name, city.state_short))
+        if home_price
+          home_price.gsub(/[$,mM]/, '').to_i < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
+        end
       end
     end
 
@@ -164,9 +166,11 @@ class City
 #-------------MEDIAN INCOME----------------------
 def self.check_median_income
   @@all.each do |city|
-    median_income = Scraper.grab_home_prices(Scraper.create_city_data_url(city.name, city.state_long))
-    unless median_income == nil
-      median_income.gsub(/[$,mM]/, '').to_i < 55775 ? city.median_income = median_income : turn_city_off(city)
+    unless city.power_switch == "off"
+      median_income = Scraper.grab_home_prices(Scraper.create_city_data_url(city.name, city.state_long))
+      unless median_income == nil
+        median_income.gsub(/[$,mM]/, '').to_i < 55775 ? city.median_income = median_income : turn_city_off(city)
+      end
     end
   end
 
@@ -176,8 +180,8 @@ end
   def self.check_diversity
     @@all.each do |city|
       total_population = city.population.tr(',', '').to_i### total population
-      white_population = Scraper.grab_diversity(Scraper.create_datausa_url(city.name, city.state_short)).tr(',', '').to_i
       unless city.power_switch == "off"
+        white_population = Scraper.grab_diversity(Scraper.create_datausa_url(city.name, city.state_short)).tr(',', '').to_i
         diversity_percent = diversity_percentage(total_population, white_population)
         #us
         diversity_percent > 37 ? city.diversity_percent = diversity_percent : turn_city_off(city)
