@@ -1,9 +1,93 @@
 require 'nokogiri'
 require 'open-uri'
+require 'open_uri_redirections'
 require 'pry'
 
 class Scraper
 
+  ##################SCRAPING##############################
+
+    def self.grab_cities(url_hash)#and populations
+      cities = {}
+      url_hash.each do |state, state_url|
+        #binding.pry
+        counter = 0
+        doc = Nokogiri::HTML(open(state_url))
+        if state == "California"
+          data = doc.css("div.section-content").css("tbody[data-reactid='191']").css("td")
+        elsif state == "Georgia" || state == "Kentucky" || state == "Montana" || state == "Vermont" || state == "Alaska"
+          data = doc.css("div.section-content").css("tbody[data-reactid='167']").css("td")
+        elsif state == "Idaho" || state == "Indiana" || state == "Tennessee" || state == "Virginia" || state == "Wisconsin"
+          data = doc.css("div.section-content").css("tbody[data-reactid='175']").css("td")
+        elsif state == "Hawaii"
+          data = doc.css("div.section-content").css("tbody[data-reactid='103']").css("td")
+        else
+          data = doc.css("div.section-content").css("tbody[data-reactid='183']").css("td")
+        end
+        total_count = data.count - 1
+        until counter > total_count
+          counter.even? ? city_name = data[counter].text : city_population = data[counter].text
+          cities.merge!({city_name => {population: city_population, state_name: state}})
+          counter += 1
+        end
+      end
+        cities
+    end
+
+    def self.grab_home_prices(index_url)
+      begin
+        doc = Nokogiri::HTML(open(index_url))
+        price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
+      end
+      rescue OpenURI::HTTPError => e
+        if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
+          puts "-->"
+        else
+          raise e
+        end
+    end
+
+
+    def self.grab_diversity(index_url)
+      begin
+        doc = Nokogiri::HTML(open(index_url))
+        white_population = doc.css("section.demographics.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value.stat-small span.stat-right span.stat-subtitle span.stat-span").first.text
+      end
+    rescue OpenURI::HTTPError => e
+      if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
+        puts "-->"
+      else
+        raise e
+      end
+    end
+
+    def self.grab_education(index_url)
+      begin
+        doc = Nokogiri::HTML(open(index_url))
+        percent = doc.css("section#education-info").css("ul").css("li")[1].text.sub("Bachelor's degree or higher: ", "")
+      end
+    rescue OpenURI::HTTPError => e
+      if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
+        puts "-->"
+      else
+        raise e
+      end
+    end
+
+
+    def self.grab_safety(index_url="http://www.usa.com/rank/washington-state--crime-index--city-rank.htm")
+      doc = Nokogiri::HTML(open(index_url))
+      cities = {}
+      counter = 4
+      total_count = doc.css("div#hcontent").css("table").css("td").count - 1
+      until counter > total_count
+          crime_index = doc.css("div#hcontent").css("table").css("td")[counter].text
+          city_name = doc.css("div#hcontent").css("table").css("td")[counter + 1].text.gsub((/,.+/), "")
+          cities.merge!({city_name => crime_index})
+          counter += 3
+      end
+      cities
+    end
 
 
 ##################GENERATING URLS###########################
@@ -31,6 +115,12 @@ class Scraper
     data_url
   end
 
+  def self.create_city_data_url(city_name, state_long)
+    city_name = check_and_convert_name_dash(city_name)
+    state_long = check_and_convert_name_dash(state_long)
+    data_url = "http://www.city-data.com/city/#{city_name}-#{state_long}.html"
+    data_url
+  end
 
 #--------------FORMATTING HELP---------------
 
@@ -49,88 +139,6 @@ class Scraper
     end
     name
   end
-
-
-##################SCRAPING##############################
-
-  def self.grab_cities(url_hash)#and populations
-    cities = {}
-    url_hash.each do |state, state_url|
-      #binding.pry
-      counter = 0
-      doc = Nokogiri::HTML(open(state_url))
-      if state == "California"
-        data = doc.css("div.section-content").css("tbody[data-reactid='191']").css("td")
-      elsif state == "Georgia" || state == "Kentucky" || state == "Montana" || state == "Vermont" || state == "Alaska"
-        data = doc.css("div.section-content").css("tbody[data-reactid='167']").css("td")
-      elsif state == "Idaho" || state == "Indiana" || state == "Tennessee" || state == "Virginia" || state == "Wisconsin"
-        data = doc.css("div.section-content").css("tbody[data-reactid='175']").css("td")
-      elsif state == "Hawaii"
-        data = doc.css("div.section-content").css("tbody[data-reactid='103']").css("td")
-      else
-        data = doc.css("div.section-content").css("tbody[data-reactid='183']").css("td")
-      end
-      total_count = data.count - 1
-      until counter > total_count
-        counter.even? ? city_name = data[counter].text : city_population = data[counter].text
-        cities.merge!({city_name => {population: city_population, state_name: state}})
-        counter += 1
-      end
-    end
-    #binding.pry
-      cities
-  end
-
-  def self.grab_home_prices(index_url)
-    begin
-      doc = Nokogiri::HTML(open(index_url))
-      price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
-    end
-    rescue OpenURI::HTTPError => e
-      if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
-        puts "-->"
-      else
-        raise e
-      end
-  end
-
-
-  def self.grab_diversity(index_url)
-    begin
-      doc = Nokogiri::HTML(open(index_url))
-      white_population = doc.css("section.demographics.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value.stat-small span.stat-right span.stat-subtitle span.stat-span").first.text
-    end
-  rescue OpenURI::HTTPError => e
-    if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
-      puts "-->"
-    else
-      raise e
-    end
-  end
-
-
-  def self.grab_safety(index_url="http://www.usa.com/rank/washington-state--crime-index--city-rank.htm")
-    doc = Nokogiri::HTML(open(index_url))
-    cities = {}
-    counter = 4
-    total_count = doc.css("div#hcontent").css("table").css("td").count - 1
-    until counter > total_count
-        crime_index = doc.css("div#hcontent").css("table").css("td")[counter].text
-        city_name = doc.css("div#hcontent").css("table").css("td")[counter + 1].text.gsub((/,.+/), "")
-        cities.merge!({city_name => crime_index})
-        counter += 3
-    end
-    cities
-  end
-
-  def self.grab_school(index_url)
-    doc = Nokogiri::HTML(open(index_url))
-    #school_rating =
-  end
-
-
-
-
 
 
 ####################REGION CODE############################

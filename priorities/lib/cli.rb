@@ -6,7 +6,7 @@ class Priorities::CLI
 
 attr_accessor :last_priority, :priorities
 
-PRIORITIES = ["Weather", "School Quality", "Home Affordability", "Job Market Health", "Safety", "Racial Diversity", "Political Climate"]
+PRIORITIES = ["Weather", "Well Educated", "Home Affordability", "Job Market Health", "Safety", "Racial Diversity", "Political Climate"]
 @@priority_pick_order = []
 
 @@counter = 0
@@ -94,8 +94,11 @@ DOC
       City.check_affordability
     elsif priority == "Job Market Health"
       puts nil
-    elsif priority == "School Quality"
-      City.check_schools
+    elsif priority == "Well Educated"
+      3.times { City.fake_delay }
+      puts "Finding cities where the percentage of college grads among residents is higher than the US avg of 21%"
+      2.times { City.fake_delay }
+      City.check_education
     elsif priority == "Safety"
       City.check_safety
     elsif priority == "Racial Diversity"
@@ -170,6 +173,8 @@ DOC
           puts "Population: #{value}".magenta
         elsif key == "avg_home_price"
           puts "Avg. Home Price: #{value}".magenta
+        elsif key == "college_grad_percent"
+          puts "% of College Graduates: #{value}".magenta
         else
           puts "#{key}: #{value}".magenta
         end

@@ -3,7 +3,7 @@ require 'colorize'
 
 class City
 
-  attr_accessor :name, :avg_home_price, :diversity_percent, :population, :crime_index, :school_score, :power_switch, :state_short, :state_long, :bio
+  attr_accessor :name, :avg_home_price, :diversity_percent, :population, :crime_index, :college_grad_percent, :power_switch, :state_short, :state_long, :bio
 
   @@all = []
 
@@ -180,6 +180,16 @@ class City
     percent = 100 - percent
     percent
   end
+#--------------EDUCATION---------------------
+def self.check_education #gets cities where the population of college grads is greater than the us avg of 21%
+  @@all.each do |city|
+    rating = Scraper.grab_education(Scraper.create_city_data_url(city.name, city.state_long)).tr('%', '').to_i
+    unless city.power_switch == "off"
+      rating > 21 ? city.college_grad_percent = rating : turn_city_off(city)
+    end
+  end
+end
+
 #---------------SAFETY----------------------
 
   def check_safety
