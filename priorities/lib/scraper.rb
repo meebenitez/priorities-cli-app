@@ -61,11 +61,13 @@ class Scraper
       doc = Nokogiri::HTML(open(state_url))
       if state == "California"
         data = doc.css("div.section-content").css("tbody[data-reactid='191']").css("td")
-      elsif state == "Georgia" || state == "Kentucky" || state == "Montana" || state == "Vermont"
+      elsif state == "Georgia" || state == "Kentucky" || state == "Montana" || state == "Vermont" || state == "Alaska"
         data = doc.css("div.section-content").css("tbody[data-reactid='167']").css("td")
       elsif state == "Idaho" || state == "Indiana" || state == "Tennessee" || state == "Virginia" || state == "Wisconsin"
         data = doc.css("div.section-content").css("tbody[data-reactid='175']").css("td")
-        else
+      elsif state == "Hawaii"
+        data = doc.css("div.section-content").css("tbody[data-reactid='103']").css("td")
+      else
         data = doc.css("div.section-content").css("tbody[data-reactid='183']").css("td")
       end
       total_count = data.count - 1
@@ -83,14 +85,13 @@ class Scraper
     begin
       doc = Nokogiri::HTML(open(index_url))
       price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
+    end
     rescue OpenURI::HTTPError => e
-      if e.message == '404 Not Found'
-        puts index_url
+      if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
+        puts "-->"
       else
         raise e
       end
-    end
-    price
   end
 
 

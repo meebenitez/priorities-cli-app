@@ -131,16 +131,17 @@ DOC
 #########################RESULTS AND OUTPUT#################################
 
   def results_check(state)
+    City.on_count > 1 ? city_text = "cities" : city_text = "city"
     if City.on_count > 5
       City.destroy_turned_off
       if @@counter < 1
-        puts "Alright! I've gathered a list of #{City.on_count} cities for us to start with. Now, let's start picking priorities!"
+        puts "Alright! I've gathered a list of #{City.on_count} #{city_text} for us to start with. Now, let's start picking priorities!"
         puts "Below is a list of things that a home buyer might consider when choosing a city to move to."
         puts "Give it a quick read, and then pick the priority that would be MOST important to you.".green
         @@counter += 1
         pick_priority(state)
       else
-        puts "I found #{City.on_count} cities that match that criteria.  Let's pick another priority!".green
+        puts "I found #{City.on_count} #{city_text} that match that criteria.  Let's pick another priority!".green
         pick_priority(state)
       end
     elsif City.on_count == 0
@@ -156,12 +157,13 @@ DOC
       end
     else
       if @@counter < 1
-        puts "LOL, well that was too easy.  We only found #{City.on_count} cities.  Here they are..."
+        puts "LOL, well that was too easy.  We only found #{City.on_count} #{city_text}."
         display_results_short(City.create_display_hash)
         City.destroy_turned_off
-        puts "Want to try again?  Maybe we'll get a longer list and can start picking priorites.".green
+        puts " "
+        puts "HAPPY HOUSE HUNTING!".green
       else
-        puts "Congratulations!  Based on the answers you gave me, I've found #{City.on_count} cities that might be excellent for you!  Here they are:".blue
+        puts "Congratulations!  Based on the answers you gave me, I've found #{City.on_count} #{city_text} that might be excellent for you!".blue
         display_results_short(City.create_display_hash)
         City.destroy_turned_off
         puts " "

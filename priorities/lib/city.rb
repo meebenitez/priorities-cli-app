@@ -121,7 +121,7 @@ class City
 
   def self.create_city(city, cities_hash) #initializing attr_accessors first grab of cities
     city_obj = self.new
-    city_obj.name = city[0]
+    city_obj.name = city[0].sub(" village", '')
     city_obj.population = cities_hash[city[0]][:population]
     city_obj.state_long = cities_hash[city[0]][:state_name]
     city_obj.state_short = STATE_HASH[cities_hash[city[0]][:state_name]]
@@ -157,6 +157,8 @@ class City
         home_price.gsub(/[$,mM]/, '').to_i < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
       end
     end
+    binding.pry
+
   end
 
 #-------------DIVERSITY-----------------------
