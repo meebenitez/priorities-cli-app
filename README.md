@@ -13,7 +13,7 @@ http://www.geostat.org
 http://www.areavibes.com
 
 NOTES:  
-This gem's reliace on scraping is FOR PROTOTYPE PURPOSES ONLY.  In it's current state, checking a priority against 60+ cities can take over a minute.
+This gem's reliace on scraping is FOR PROTOTYPE PURPOSES ONLY.  In it's current state, checking a priority against 60+ cities can take over a minute.  This gem can be easily modified and expanded to utilize more efficient data sourcing methods.
 
 ## Installation
 
