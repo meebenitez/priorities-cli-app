@@ -1,6 +1,6 @@
 # Priorities
 
-Welcome to the Priorities Gem! 
+Welcome to the Priorities Gem!
 
 Prospective home buyer? Looking to move to a new city? This gem will help you narrow down your city search based on your chosen criteria (budget, politics, safety, education, etc.) in the order you find most important.
 
@@ -13,7 +13,7 @@ http://www.geostat.org
 http://www.areavibes.com
 
 NOTES:  
-This gem's reliace on scraping is FOR PROTOTYPE PURPOSES ONLY.  In its current state, checking a priority against 60+ cities can take over a minute.  This gem can be easily modified and expanded to utilize more efficient data sourcing methods.
+This gem's reliance on scraping is FOR PROTOTYPE PURPOSES ONLY.  In its current state, checking a priority against 60+ cities can take over a minute.  Depending on the site being sourced from, some checks take longer than others.  This gem can be easily modified and expanded to utilize more efficient data sourcing methods.
 
 ## Installation
 
@@ -74,4 +74,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/'meebe
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
