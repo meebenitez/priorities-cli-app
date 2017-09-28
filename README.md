@@ -1,8 +1,18 @@
 # Priorities
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/priorities`. To experiment with that code, run `bin/console` for an interactive prompt.
+Welcome to the Priorities Gem! 
 
-TODO: Delete this and the text above, and describe your gem
+Prospective home buyer? Looking to move to a new city? This gem will help you narrow down your city search based on your personal criteria (budget, politics, safety, education, etc.)
+
+'Priorities' sources its data from the following sites:
+https://datausa.io
+http://worldpopulationreview.com
+http://www.city-data.com
+http://www.geostat.org
+http://www.areavibes.com
+
+NOTES:
+Because the data sourcing is reliant on scraping, checking a priority against 40+ cities can take over a minute.  This gem is a working prototype that can be easily modified and expanded and, in final implementation as an app, is not intended to be fully reliant on web-scraping.
 
 ## Installation
 
@@ -22,7 +32,10 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+MODIFYING:
+
+Adding Priorities -
+
 
 ## Development
 
