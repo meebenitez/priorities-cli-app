@@ -87,7 +87,7 @@ DOC
     end
   end
 
-  def run_priority_check(priority) #["Weather", "School Quality", "Home Affordability", "Job Market Health", "Safety", "Racial Diversity", "Political Climate"]
+  def run_priority_check(priority)
     if priority == "Weather"
       City.check_weather
     elsif priority == "Home Affordability"
@@ -112,10 +112,8 @@ DOC
       puts "Finding cities where the percentage of non-White residents is higher than the national average of 37%"
       2.times { City.fake_delay }
       City.check_diversity
-    elsif priority == "Politics"
-      City.check_majority_voters
     else
-      puts nil
+      City.check_majority_voters
     end
   end
 

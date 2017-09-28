@@ -178,7 +178,7 @@ end
 #-------------DIVERSITY-----------------------
   def self.check_diversity
     @@all.each do |city|
-      total_population = city.population.tr(',', '').to_i### total population
+      total_population = city.population.tr(',', '').to_i
       unless city.power_switch == "off"
         white_population = Scraper.grab_diversity(Scraper.create_datausa_url(city.name, city.state_short)).tr(',', '').to_i
         if white_population
@@ -317,7 +317,7 @@ end
 
 
 
-  def self.numbered_input_validator(num_options)#returns valid numbered input
+  def self.numbered_input_validator(num_options)
     input = gets.strip
     valid_options = (1..num_options).to_a
     if valid_options.include?(input.to_i)
