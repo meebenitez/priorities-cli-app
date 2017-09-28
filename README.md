@@ -5,7 +5,7 @@ Welcome to the Priorities Gem!
 Prospective home buyer? Looking to move to a new city? This gem will help you narrow down your city search based on your personal criteria (budget, politics, safety, education, etc.)
 
 'Priorities' sources its data from the following sites:
-https://datausa.io
+<br>https://datausa.io
 http://worldpopulationreview.com
 http://www.city-data.com
 http://www.geostat.org
