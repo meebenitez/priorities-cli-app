@@ -9,7 +9,6 @@ class Scraper
     def self.grab_cities(url_hash)#and populations
       cities = {}
       url_hash.each do |state, state_url|
-        #binding.pry
         counter = 0
         doc = Nokogiri::HTML(open(state_url))
         if state == "California"
@@ -36,8 +35,7 @@ class Scraper
     def self.grab_home_prices(index_url)
       begin
         doc = Nokogiri::HTML(open(index_url))
-#        price = doc.css("section#median-income div.hgraph").css("td")[1].text
-        doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
+        price = doc.css("section.housing.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value span.stat-right span.stat-span")[2].text
       end
       rescue OpenURI::HTTPError => e
         if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
@@ -103,21 +101,19 @@ class Scraper
       end
     end
 
-
-
-      def self.grab_safety(index_url="http://www.usa.com/rank/washington-state--crime-index--city-rank.htm")
+    def self.grab_crime_stats(index_url)
+      begin
         doc = Nokogiri::HTML(open(index_url))
-        cities = {}
-        counter = 4
-        total_count = doc.css("div#hcontent").css("table").css("td").count - 1
-        until counter > total_count
-            crime_index = doc.css("div#hcontent").css("table").css("td")[counter].text
-            city_name = doc.css("div#hcontent").css("table").css("td")[counter + 1].text.gsub((/,.+/), "")
-            cities.merge!({city_name => crime_index})
-            counter += 3
-        end
-        cities
+        crime_stat = doc.css("table.av-default.crime-cmp").css("tr.summary.major").css("td")[3].text.sub(' (estimate)', '').tr(',','').to_i
       end
+    rescue OpenURI::HTTPError => e
+      if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
+        puts "-->"
+      else
+        raise e
+      end
+    end
+
 
 
 ##################GENERATING URLS###########################
@@ -128,7 +124,6 @@ class Scraper
   def self.create_datausa_url(city_name, state_short)
     city_name = check_and_convert_name_dash(city_name)
     data_url = "https://datausa.io/profile/geo/#{city_name.downcase}-#{state_short.downcase}/"
-    #binding.pry
     data_url
   end
 
@@ -136,7 +131,6 @@ class Scraper
     state_name = check_and_convert_name_dash(state_name)
     data_url = "http://worldpopulationreview.com/states/#{state_name.downcase}-population/cities/"
     data_url
-      #  binding.pry
   end
 
   def self.create_greatschools_url(city_name, state_long)
@@ -155,6 +149,12 @@ class Scraper
   def self.create_geostat_url(city_name, state_short)
     city_name = check_and_convert_name_dash(city_name)
     data_url = "http://www.geostat.org/data/#{city_name}-#{state_short}/voting"
+    data_url
+  end
+
+  def self.create_areavibes_url(city_name, state_short)
+    city_name = check_and_convert_name_dash(city_name)
+    data_url = "http://www.areavibes.com/#{city_name}-#{state_short}/crime/"
     data_url
   end
 
@@ -182,7 +182,6 @@ class Scraper
 #def self.create_state_urls(input)
 #  url_hash = {}
 #  City.regions(input).each { |state| url_hash.merge!({state => create_worldpop_url(state)}) }
-  #binding.pry
 #  url_hash
 #end
 #############################################################

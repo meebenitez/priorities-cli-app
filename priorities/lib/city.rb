@@ -3,7 +3,7 @@ require 'colorize'
 
 class City
 
-  attr_accessor :name, :avg_home_price, :diversity_percent, :median_income, :population, :crime_index, :college_grad_percent, :majority_vote, :power_switch, :state_short, :state_long, :bio
+  attr_accessor :name, :avg_home_price, :diversity_percent, :median_income, :population, :crimes_per_100k, :college_grad_percent, :majority_vote, :power_switch, :state_short, :state_long, :bio
 
   @@all = []
 
@@ -89,7 +89,6 @@ class City
     input = numbered_input_validator(POPULATION_CHOICES.length)
     input = input.to_i - 1
     input = POPULATION_CHOICES.keys[input]
-  #  binding.pry
     input
   end
 
@@ -209,6 +208,20 @@ def self.check_education #gets cities where the population of college grads is g
   end
 end
 
+#---------------CRIME STATS----------------------
+
+  def self.check_crime_stats #checking to see if crimes per 100K residents is less than national average of 2,860
+    @@all.each do |city|
+      unless city.power_switch == "off"
+        crimes = Scraper.grab_crime_stats(Scraper.create_areavibes_url(city.name, city.state_short))
+        if crimes
+          crimes < 2860 ? city.crimes_per_100k = crimes : turn_city_off(city)
+        end
+      end
+    end
+  end
+
+
 #--------------MAJORITY VOTERS-------------------------
 
   def self.check_majority_voters
@@ -235,20 +248,8 @@ end
     input = VOTER_TYPES[input]
   end
 
-#---------------SAFETY----------------------
 
-  def check_safety
-    #safety rating under 2000 is safe
-    Scraper.grab_safety.each do |city1, safety_index|
-      @@all.each do |city|
-        if city[0] == city1 && safety_index.tr(',', '').to_i > 2000
-          all_cities.delete(city[0])
-        else
-            all_cities[city[0]][:crime_index] = safety_index if city[0] == city1
-        end
-      end
-    end
-  end
+
 
 #########################HELPERS#############################
 
@@ -342,7 +343,6 @@ end
   def self.input_price_validator
     puts "Please enter your home budget:"
     input = gets.strip
-    #example "$46,990".gsub(/[\D]/, "")
     input = input.gsub(/[\D]/, "")
     puts "You entered $#{comma_numbers(input)}. Is this correct?"
     yes_no_input_validator == "yes" ? input : input_price_validator

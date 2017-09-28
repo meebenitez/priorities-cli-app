@@ -6,7 +6,8 @@ class Priorities::CLI
 
 attr_accessor :last_priority, :priorities
 
-PRIORITIES = ["Weather", "Well Educated", "Home Affordability", "Median Income", "Safety", "Racial Diversity", "Politics"]
+PRIORITIES = ["Home Affordability", "Median Income", "Crime Stats", "Well Educated", "Racial Diversity", "Politics"]
+
 @@priority_pick_order = []
 
 @@counter = 0
@@ -102,8 +103,11 @@ DOC
       puts "Finding cities where the percentage of college grads among residents is higher than the US avg of 21%"
       2.times { City.fake_delay }
       City.check_education
-    elsif priority == "Safety"
-      City.check_safety
+    elsif priority == "Crime Stats"
+      3.times { City.fake_delay }
+      puts "Finding cities where the total crimes per 100k people is less than the US average of 2,860"
+      2.times { City.fake_delay }
+      City.check_crime_stats
     elsif priority == "Racial Diversity"
       3.times { City.fake_delay }
       puts "Finding cities where the percentage of non-White residents is higher than the national average of 37%"
@@ -178,6 +182,10 @@ DOC
           puts "% of College Graduates: #{value}".magenta
         elsif key == "median_income"
           puts "Avg. Median Income: #{value}".magenta
+        elsif key == "majority_vote"
+          puts "Majority Voting Party: #{value}".magenta
+        elsif key == "crimes_per_100k"
+          puts "Crimes per 100K people: #{value}".magenta
         else
           puts "#{key}: #{value}".magenta
         end
