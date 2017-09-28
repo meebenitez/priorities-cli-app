@@ -37,7 +37,7 @@ Users define the state and population size of the city they want to live in, and
 
 When a user chooses a "priority," a set of conditions is run on all city objects with their power_switch set to "on."  If a city doesn't meet the condition(s), its switch is set to "off."
 
-The user chooses priorities until their list of cities is narrowed down to 5 or less, at which point the cities and their attributes are displayed.
+The user chooses priorities until their list of "on" cities is narrowed down to 5 or less, at which point the cities and their attributes are displayed.
 
 (**note** There is code existing in the bottom comments of each file that will allow you to let the user search by "region" of the US instead of just a state.  This is not set up as default for this prototype as it returns too many results for quick scraping of the given sources.)
 
