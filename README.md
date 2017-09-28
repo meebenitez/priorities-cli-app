@@ -5,13 +5,14 @@ Welcome to the Priorities Gem!
 Prospective home buyer? Looking to move to a new city? This gem will help you narrow down your city search based on your personal criteria (budget, politics, safety, education, etc.)
 
 'Priorities' sources its data from the following sites:
-<br>https://datausa.io
-http://worldpopulationreview.com
-http://www.city-data.com
-http://www.geostat.org
+
+https://datausa.io  
+http://worldpopulationreview.com  
+http://www.city-data.com  
+http://www.geostat.org  
 http://www.areavibes.com
 
-NOTES:
+NOTES:  
 Because the data sourcing is reliant on scraping, checking a priority against 40+ cities can take over a minute.  This gem is a working prototype that can be easily modified and expanded and, in final implementation as an app, is not intended to be fully reliant on web-scraping.
 
 ## Installation
@@ -30,11 +31,33 @@ Or install it yourself as:
 
     $ gem install priorities
 
-## Usage
+## How it works
 
-MODIFYING:
+Users define the state and population size of the city they want to live in, and city objects are created based on those parameters.  All cities are initialized with a "power_switch" attribute set to "on".
 
-Adding Priorities -
+When a user chooses a "priority," a set of conditions is run on all city objects with their power_switch set to "on."  If a city doesn't meet the condition(s), its switch is set to "off."
+
+The user chooses priorities until their list of cities is narrowed down to 5 or less, at which point the cities and their attributes are displayed.
+
+(**note** There is code existing in the bottom comments of each file that will allow you to let the user search by "region" of the US instead of just a state.  This is not set up as default for this prototype as it returns too many results for quick scraping of the given sources.)
+
+## Modifications
+
+This gem is built to be modified.  New priority additions should include the following:
+
+Scraper.rb:  
+-"create_url" method
+-"grab" method
+-"input validator" (optional)
+
+City.rb
+-a new instance variable (attr_accessor)
+-"check" method
+
+Cli.rb:
+-modification to PRIORITIES
+-modification to the run_priority_check
+-modification to the "display_results_short" method
 
 
 ## Development
