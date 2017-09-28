@@ -155,7 +155,7 @@ class City
     3.times {fake_delay}
     @@all.each do |city|
       unless city.power_switch == "off"
-        home_price = Scraper.grab_home_prices(Scraper.create_datausa_url(city.name, city.state_short))
+        home_price = Scraper.grab_home_prices(Scraper.create_city_data_url(city.name, city.state_long))
         if home_price
           home_price.gsub(/[$,mM]/, '').to_i < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
         end
@@ -215,7 +215,7 @@ end
       unless city.power_switch == "off"
         crimes = Scraper.grab_crime_stats(Scraper.create_areavibes_url(city.name, city.state_short))
         if crimes
-          crimes < 2860 ? city.crimes_per_100k = crimes : turn_city_off(city)
+          crimes.tr(',','').to_i < 2860 ? city.crimes_per_100k = crimes : turn_city_off(city)
         end
       end
     end
