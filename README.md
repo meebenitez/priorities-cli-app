@@ -46,18 +46,18 @@ The user chooses priorities until their list of cities is narrowed down to 5 or 
 This gem is built to be modified.  New priority additions should include the following:
 
 Scraper.rb:  
--"create_url" method
--"grab" method
--"input validator" (optional)
+-"create_url" method  
+-"grab" method  
+-"input validator" (optional)  
 
-City.rb
--a new instance variable (attr_accessor)
--"check" method
+City.rb  
+-a new instance variable (attr_accessor)  
+-"check" method  
 
-Cli.rb:
--modification to PRIORITIES
--modification to the run_priority_check
--modification to the "display_results_short" method
+Cli.rb:  
+-modification to PRIORITIES  
+-modification to the run_priority_check  
+-modification to the "display_results_short" method  
 
 
 ## Development
