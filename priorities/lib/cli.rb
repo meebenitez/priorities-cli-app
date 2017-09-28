@@ -6,7 +6,7 @@ class Priorities::CLI
 
 attr_accessor :last_priority, :priorities
 
-PRIORITIES = ["Weather", "Well Educated", "Home Affordability", "Median Income", "Safety", "Racial Diversity", "Political Climate"]
+PRIORITIES = ["Weather", "Well Educated", "Home Affordability", "Median Income", "Safety", "Racial Diversity", "Politics"]
 @@priority_pick_order = []
 
 @@counter = 0
@@ -109,7 +109,7 @@ DOC
       puts "Finding cities where the percentage of non-White residents is higher than the national average of 37%"
       2.times { City.fake_delay }
       City.check_diversity
-    elsif priority == "Political Climate"
+    elsif priority == "Politics"
       City.check_majority_voters
     else
       puts nil
@@ -142,8 +142,8 @@ DOC
         City.check_population(state)
         results_check(state)
       else
-        puts "Looks like none of the cities in your current list fit that priority."
-        puts "Let's choose a different one."
+        puts "Looks like none of the cities in your current list fit that criteria."
+        puts "Let's choose a different priority."
         City.reset_last
         pick_priority(state)
       end
