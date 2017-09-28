@@ -2,7 +2,7 @@
 
 Welcome to the Priorities Gem! 
 
-Prospective home buyer? Looking to move to a new city? This gem will help you narrow down your city search based on your personal criteria (budget, politics, safety, education, etc.)
+Prospective home buyer? Looking to move to a new city? This gem will help you narrow down your city search based on your chosen criteria (budget, politics, safety, education, etc.) in the order you find most important.
 
 'Priorities' sources its data from the following sites:
 
