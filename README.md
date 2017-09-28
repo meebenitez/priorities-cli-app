@@ -56,7 +56,7 @@ City.rb
 
 Cli.rb:  
 -modification to PRIORITIES  
--modification to the run_priority_check  
+-modification to the run_priority_check method
 -modification to the "display_results_short" method  
 
 
