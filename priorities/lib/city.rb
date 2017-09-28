@@ -3,7 +3,7 @@ require 'colorize'
 
 class City
 
-  attr_accessor :name, :avg_home_price, :diversity_percent, :median_income, :population, :crime_index, :college_grad_percent, :majority_vote :power_switch, :state_short, :state_long, :bio
+  attr_accessor :name, :avg_home_price, :diversity_percent, :median_income, :population, :crime_index, :college_grad_percent, :majority_vote, :power_switch, :state_short, :state_long, :bio
 
   @@all = []
 
@@ -212,18 +212,28 @@ end
 #--------------MAJORITY VOTERS-------------------------
 
   def self.check_majority_voters
-    puts "Let's find a city that matches your politics.  How do you identify yourself politically?"
-    user_input = numbered_input_validator(VOTER_TYPES.count)
+    input = pick_political_identity
+    3.times { fake_delay }
+    puts "Finding cities where the majority of voters are #{input}."
+    2.times { fake_delay }
     @@all.each do |city|
       unless city.power_switch == "off"
         voter_hash = {}
         voter_hash = Scraper.grab_majority_voters(Scraper.create_geostat_url(city.name, city.state_short))
         majority_voter = voter_hash.key(voter_hash.values.max)
-        majority_voter == user_input ? city.majority_vote = majority_voter : turn_city_off(city)
+        majority_voter == input ? city.majority_vote = majority_voter : turn_city_off(city)
       end
     end
   end
 
+  def self.pick_political_identity
+    puts "Let's find a city that matches your politics.  How do you identify yourself politically?"
+    puts " "
+    VOTER_TYPES.each_with_index { |choice, index| puts "#{index +1}. #{choice}".blue }
+    input = numbered_input_validator(VOTER_TYPES.count)
+    input = input.to_i - 1
+    input = VOTER_TYPES[input]
+  end
 
 #---------------SAFETY----------------------
 

@@ -110,7 +110,7 @@ DOC
       2.times { City.fake_delay }
       City.check_diversity
     elsif priority == "Political Climate"
-      puts nil
+      City.check_majority_voters
     else
       puts nil
     end
