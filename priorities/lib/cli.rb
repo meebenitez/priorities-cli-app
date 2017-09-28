@@ -1,7 +1,6 @@
 require 'pry'
 require 'colorize'
 
-#Our CLI Controller
 class Priorities::CLI
 
 attr_accessor :last_priority, :priorities

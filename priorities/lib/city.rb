@@ -117,7 +117,6 @@ class City
       end
     end
     POPULATION_CHOICES.delete(input)
-    #binding.pry
   end
 
   def self.create_city(city, cities_hash) #initializing attr_accessors first grab of cities
@@ -128,7 +127,6 @@ class City
     city_obj.state_short = STATE_HASH[cities_hash[city[0]][:state_name]]
     city_obj.power_switch = "on"
     @@all << city_obj
-    #binding.pry
   end
 
   def self.population_search_message(input, state)
@@ -147,7 +145,7 @@ class City
 
 ############PRIORITY CHECKS##############################################
 
-#-------------HOME AFFODABILITY-----------------------
+#-------------HOME AFFORDABILITY-----------------------
   def self.check_affordability
     user_budget = input_price_validator.to_i + 1 #grab the user's budget
     3.times {fake_delay}
