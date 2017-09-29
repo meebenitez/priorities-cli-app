@@ -180,8 +180,9 @@ end
     @@all.each do |city|
       total_population = city.population.tr(',', '').to_i
       unless city.power_switch == "off"
-        white_population = Scraper.grab_diversity(Scraper.create_datausa_url(city.name, city.state_short)).tr(',', '').to_i
+        white_population = Scraper.grab_diversity(Scraper.create_datausa_url(city.name, city.state_short))
         if white_population
+          white_population = white_population.tr(',', '').to_i
           diversity_percent = diversity_percentage(total_population, white_population)
           diversity_percent > 37 ? city.diversity_percent = diversity_percent : turn_city_off(city)
         end
@@ -198,9 +199,9 @@ end
 def self.check_education #gets cities where the population of college grads is greater than the us avg of 21%
   @@all.each do |city|
     unless city.power_switch == "off"
-      rating = Scraper.grab_education(Scraper.create_city_data_url(city.name, city.state_long)).tr('%', '').to_i
+      rating = Scraper.grab_education(Scraper.create_city_data_url(city.name, city.state_long))
       if rating
-      rating > 21 ? city.college_grad_percent = rating : turn_city_off(city)
+      rating.tr('%', '').to_i > 21 ? city.college_grad_percent = rating : turn_city_off(city)
       end
     end
   end

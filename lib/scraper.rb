@@ -88,6 +88,7 @@ class Scraper
     def self.grab_majority_voters(index_url)
       begin
         doc = Nokogiri::HTML(open(index_url))
+        binding.pry
         republican = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[5].text
         democrat = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[2].text
         independent = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[8].text
@@ -104,7 +105,10 @@ class Scraper
     def self.grab_crime_stats(index_url)
       begin
         doc = Nokogiri::HTML(open(index_url))
-        crime_stat = doc.css("table.av-default.crime-cmp").css("tr.summary.major").css("td")[3].text.sub(' (estimate)', '')
+        crime_stat = doc.css("table.av-default.crime-cmp").css("tr.summary.major").css("td")[3].text
+        if crime_stat
+          crime_stat = crime_stat.sub(' (estimate)', '')
+        end
       end
     rescue OpenURI::HTTPError => e
       if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
