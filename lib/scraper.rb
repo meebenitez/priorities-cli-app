@@ -25,6 +25,7 @@ class Scraper
         total_count = data.count - 1
         until counter > total_count
           counter.even? ? city_name = data[counter].text : city_population = data[counter].text
+          city_name = city_name.sub(" village", '')
           cities.merge!({city_name => {population: city_population, state_name: state}})
           counter += 1
         end
@@ -88,11 +89,10 @@ class Scraper
     def self.grab_majority_voters(index_url)
       begin
         doc = Nokogiri::HTML(open(index_url))
-        binding.pry
-        republican = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[5].text
-        democrat = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[2].text
-        independent = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[8].text
-        voter_hash = {"Republican" => republican.tr('%', '').to_i.to_f, "Democrat" => democrat.tr('%', '').to_i.to_f, "Independent" => independent.tr('%', '').to_i.to_f}
+        republican = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[5]
+        democrat = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[2]
+        independent = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[8]
+        voter_hash = {"Republican" => republican.text.tr('%', '').to_f, "Democrat" => democrat.text.tr('%', '').to_f, "Independent" => independent.text.tr('%', '').to_f}
       end
       rescue OpenURI::HTTPError => e
       if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
@@ -151,13 +151,14 @@ class Scraper
   end
 
   def self.create_geostat_url(city_name, state_short)
-    city_name = check_and_convert_period_name(check_and_convert_name_dash(city_name))
+    city_name = city_name.sub(/\s[a-z].+/, '')
+    city_name = check_and_convert_name_dash(check_and_convert_period_name(city_name))
     data_url = "http://www.geostat.org/data/#{city_name}-#{state_short}/voting"
     data_url
   end
 
   def self.create_areavibes_url(city_name, state_short)
-    city_name = check_and_cover_period_name_plus(check_and_convert_name_dash(city_name))
+    city_name = check_and_convert_name_dash(check_and_convert_period_name_plus(city_name))
     data_url = "http://www.areavibes.com/#{city_name}-#{state_short}/crime/"
     data_url
   end
@@ -170,10 +171,10 @@ class Scraper
   end
 
   def self.check_and_convert_period_name(name)
-    name = name.gsub('. ','-')
+    name = name.gsub('.','')
   end
 
-  def self.check_and_cover_period_name_plus(name)
+  def self.check_and_convert_period_name_plus(name)
     name = name.gsub('. ', '.+')
   end
 

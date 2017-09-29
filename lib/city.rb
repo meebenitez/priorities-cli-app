@@ -121,7 +121,7 @@ class City
 
   def self.create_city(city, cities_hash) #initializing attr_accessors first grab of cities
     city_obj = self.new
-    city_obj.name = city[0].sub(" village", '')
+    city_obj.name = city[0]
     city_obj.population = cities_hash[city[0]][:population]
     city_obj.state_long = cities_hash[city[0]][:state_name]
     city_obj.state_short = STATE_HASH[cities_hash[city[0]][:state_name]]
@@ -232,8 +232,10 @@ end
       unless city.power_switch == "off"
         voter_hash = {}
         voter_hash = Scraper.grab_majority_voters(Scraper.create_geostat_url(city.name, city.state_short))
-        majority_voter = voter_hash.key(voter_hash.values.max)
-        majority_voter == input ? city.majority_vote = majority_voter : turn_city_off(city)
+        if voter_hash
+          majority_voter = voter_hash.key(voter_hash.values.max)
+          majority_voter == input ? city.majority_vote = majority_voter : turn_city_off(city)
+        end
       end
     end
   end
@@ -309,12 +311,12 @@ end
 
 #--------------------------INPUT VALIDATORS---------------------------
 
-def self.state_input_validator
-  puts "(Please type in the FULL NAME of a state.)".green
-  input = gets.strip
-  input = input.split(' ').map {|w| w.capitalize }.join(' ')
-  STATE_HASH.has_key?(input) ? state = input : state_input_validator
-end
+  def self.state_input_validator
+    puts "(Please type in the FULL NAME of a state.)".green
+    input = gets.strip
+    input = input.split(' ').map {|w| w.capitalize }.join(' ')
+    STATE_HASH.has_key?(input) ? state = input : state_input_validator
+  end
 
 
 
