@@ -156,6 +156,8 @@ class City
         home_price = Scraper.grab_home_prices(Scraper.create_city_data_url(city.name, city.state_long))
         if home_price
           home_price.gsub(/[$,mM]/, '').to_i < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
+        else
+          turn_city_off(city)
         end
       end
     end
@@ -169,6 +171,8 @@ def self.check_median_income
       median_income = Scraper.grab_median_income(Scraper.create_city_data_url(city.name, city.state_long))
       if median_income
         median_income.gsub(/[$,mM]/, '').to_i < 55775 ? city.median_income = median_income : turn_city_off(city)
+      else
+        turn_city_off(city)
       end
     end
   end
@@ -185,6 +189,8 @@ end
           white_population = white_population.tr(',', '').to_i
           diversity_percent = diversity_percentage(total_population, white_population)
           diversity_percent > 37 ? city.diversity_percent = diversity_percent : turn_city_off(city)
+        else
+          turn_city_off(city)
         end
       end
     end
@@ -201,7 +207,9 @@ def self.check_education #gets cities where the population of college grads is g
     unless city.power_switch == "off"
       rating = Scraper.grab_education(Scraper.create_city_data_url(city.name, city.state_long))
       if rating
-      rating.tr('%', '').to_i > 21 ? city.college_grad_percent = rating : turn_city_off(city)
+        rating.tr('%', '').to_i > 21 ? city.college_grad_percent = rating : turn_city_off(city)
+      else
+        turn_city_off(city)
       end
     end
   end
@@ -215,6 +223,8 @@ end
         crimes = Scraper.grab_crime_stats(Scraper.create_areavibes_url(city.name, city.state_short))
         if crimes
           crimes.tr(',','').to_i < 2860 ? city.crimes_per_100k = crimes : turn_city_off(city)
+        else
+          turn_city_off(city)
         end
       end
     end
@@ -235,6 +245,8 @@ end
         if voter_hash
           majority_voter = voter_hash.key(voter_hash.values.max)
           majority_voter == input ? city.majority_vote = majority_voter : turn_city_off(city)
+        else
+          turn_city_off(city)
         end
       end
     end
