@@ -151,13 +151,13 @@ class Scraper
   end
 
   def self.create_geostat_url(city_name, state_short)
-    city_name = check_and_convert_name_dash(city_name)
+    city_name = check_and_convert_period_name(check_and_convert_name_dash(city_name))
     data_url = "http://www.geostat.org/data/#{city_name}-#{state_short}/voting"
     data_url
   end
 
   def self.create_areavibes_url(city_name, state_short)
-    city_name = check_and_convert_name_dash(city_name)
+    city_name = check_and_cover_period_name_plus(check_and_convert_name_dash(city_name))
     data_url = "http://www.areavibes.com/#{city_name}-#{state_short}/crime/"
     data_url
   end
@@ -166,8 +166,15 @@ class Scraper
 #--------------FORMATTING HELP---------------
 
   def self.check_and_convert_name_dash(name)
-    name = name.gsub(' ', '-') if name.include?(" ")
-    name
+    name = name.gsub(' ', '-')
+  end
+
+  def self.check_and_convert_period_name(name)
+    name = name.gsub('. ','-')
+  end
+
+  def self.check_and_cover_period_name_plus(name)
+    name = name.gsub('. ', '.+')
   end
 
   def self.check_and_convert_name_underscore(name)
