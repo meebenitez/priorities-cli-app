@@ -12,6 +12,8 @@ http://www.city-data.com
 http://www.geostat.org  
 http://www.areavibes.com
 
+Check out the video walkthrough there: https://youtu.be/9_70BT8zuZ4
+
 NOTES:  
 This gem's reliance on scraping is FOR PROTOTYPE PURPOSES ONLY.  In its current state, checking a priority against 60+ cities can take over a minute.  Depending on the site being sourced from, some checks take longer than others.  This gem can be easily modified and expanded to utilize more efficient data sourcing methods.
 
