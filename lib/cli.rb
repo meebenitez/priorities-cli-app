@@ -73,8 +73,9 @@ DOC
 
   def pick_priority(state)
     if PRIORITIES.count > 1
+    puts "(Enter a number between 1 and #{PRIORITIES.count})".green
     PRIORITIES.each_with_index { |priority, index| puts "#{index + 1}. #{priority}" }
-    input = gets.strip.to_i
+    input = City.numbered_input_validator(PRIORITIES.count).to_i
     input = input - 1
     priority = PRIORITIES[input]
     run_priority_check(priority)
