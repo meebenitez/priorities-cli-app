@@ -205,9 +205,9 @@ end
 def self.check_education #gets cities where the population of college grads is greater than the us avg of 21%
   @@all.each do |city|
     unless city.power_switch == "off"
-      rating = Scraper.grab_education(Scraper.create_city_data_url(city.name, city.state_long))
+      rating = Scraper.grab_education(Scraper.create_geostat_url(city.name, city.state_short))
       if rating
-        rating.tr('%', '').to_i > 21 ? city.college_grad_percent = rating : turn_city_off(city)
+        rating.tr('%', '').to_f > 21 ? city.college_grad_percent = rating : turn_city_off(city)
       else
         turn_city_off(city)
       end

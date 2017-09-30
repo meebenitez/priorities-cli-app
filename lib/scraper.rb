@@ -66,7 +66,7 @@ class Scraper
       begin
         sleep(1.5) #polite 1 second wait before the next traffic hit
         doc = Nokogiri::HTML(open(index_url))
-        percent = doc.css("section#education-info").css("ul").css("li")[1].text.sub("Bachelor's degree or higher: ", "")
+        percent = doc.css("div.responsive.span6 div.dashboard-stat.green").css("div.details").css("div.number")[1].text
       end
     rescue OpenURI::HTTPError => e
       if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
