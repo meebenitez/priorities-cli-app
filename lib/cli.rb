@@ -13,58 +13,58 @@ PRIORITIES = ["Home Affordability", "Median Income", "Safety Stats", "% College 
 
   def call
 
-puts <<-DOC
+    puts <<-DOC
 
-            (
-               )
-            (            ./\.
-         |^^^^^^^^^|   ./LLLL\.
-         |`.'`.`'`'| ./LLLLLLLL\.
-         |.'`'.'`.'|/LLLL/^^\LLLL\.
-         |.`.''``./LLLL/^ () ^\LLLL\.
-         |.'`.`./LLLL/^  =   = ^\LLLL\.
-         |.`../LLLL/^  _.----._  ^\LLLL\.
-         |'./LLLL/^ =.' ______ `.  ^\LLLL\.
-         |/LLLL/^   /|--.----.--|\ = ^\LLLL\.
-       ./LLLL/^  = |=|__|____|__|=|    ^\LLLL\.
-     ./LLLL/^=     |*|~~|~~~~|~~|*|   =  ^\LLLL\.
-    ./LLLL/^       |=|--|----|--|=|        ^\LLLL\.
-  ./LLLL/^      =  `-|__|____|__|-' =        ^\LLLL\.
-./LLLL/^   =         `------------'        =    ^\LLLL\.
-  ||     =      =      = ____     =         =     ||
-  ||  =               .-'    '-.        =         ||
-  ||     _..._ =    .'  .-()-.  '.  =   _..._  =  ||
-  || = .'_____`.   /___:______:___\   .'_____`.   ||
-  || .-|---.---|-.   ||  _  _  ||   .-|---.---|-. ||
-  || |=|   |   |=|   || | || | ||   |=|   |   |=| ||
-  || |=|___|___|=|=  || | || | ||=  |=|___|___|=| ||
-  || |=|~~~|~~~|=|   || | || | ||   |=|~~~|~~~|=| ||
-  || |*|   |   |*|   || | || | ||  =|*|   |   |*| ||
-  || |=|---|---|=| = || | || | ||   |=|---|---|=| ||
-  || |=|   |   |=|   || | || | ||   |=|   |   |=| ||
-  || `-|___|___|-'   ||o|_||_| ||   `-|___|___|-' ||
-  ||  '---------`  = ||  _  _  || =  `---------'  ||
-  || =   =           || | || | ||      =     =    ||
-  ||  %@&   &@  =    || |_||_| ||  =   @&@   %@ = ||
-  || %@&@% @%@&@    _||________||_   &@%&@ %&@&@  ||
-  ||,,\\V//\\V//, _|___|------|___|_ ,\\V//\\V//,,||
-  |--------------|____/--------\____|--------------|
-  /- _  -  _   - _ -  _ - - _ - _ _ - _  _-  - _ - _ \.
- /_jgs________________________________________________\.
-DOC
+                (
+                   )
+                (            ./\.
+             |^^^^^^^^^|   ./LLLL\.
+             |`.'`.`'`'| ./LLLLLLLL\.
+             |.'`'.'`.'|/LLLL/^^\LLLL\.
+             |.`.''``./LLLL/^ () ^\LLLL\.
+             |.'`.`./LLLL/^  =   = ^\LLLL\.
+             |.`../LLLL/^  _.----._  ^\LLLL\.
+             |'./LLLL/^ =.' ______ `.  ^\LLLL\.
+             |/LLLL/^   /|--.----.--|\ = ^\LLLL\.
+           ./LLLL/^  = |=|__|____|__|=|    ^\LLLL\.
+         ./LLLL/^=     |*|~~|~~~~|~~|*|   =  ^\LLLL\.
+        ./LLLL/^       |=|--|----|--|=|        ^\LLLL\.
+      ./LLLL/^      =  `-|__|____|__|-' =        ^\LLLL\.
+    ./LLLL/^   =         `------------'        =    ^\LLLL\.
+      ||     =      =      = ____     =         =     ||
+      ||  =               .-'    '-.        =         ||
+      ||     _..._ =    .'  .-()-.  '.  =   _..._  =  ||
+      || = .'_____`.   /___:______:___\   .'_____`.   ||
+      || .-|---.---|-.   ||  _  _  ||   .-|---.---|-. ||
+      || |=|   |   |=|   || | || | ||   |=|   |   |=| ||
+      || |=|___|___|=|=  || | || | ||=  |=|___|___|=| ||
+      || |=|~~~|~~~|=|   || | || | ||   |=|~~~|~~~|=| ||
+      || |*|   |   |*|   || | || | ||  =|*|   |   |*| ||
+      || |=|---|---|=| = || | || | ||   |=|---|---|=| ||
+      || |=|   |   |=|   || | || | ||   |=|   |   |=| ||
+      || `-|___|___|-'   ||o|_||_| ||   `-|___|___|-' ||
+      ||  '---------`  = ||  _  _  || =  `---------'  ||
+      || =   =           || | || | ||      =     =    ||
+      ||  %@&   &@  =    || |_||_| ||  =   @&@   %@ = ||
+      || %@&@% @%@&@    _||________||_   &@%&@ %&@&@  ||
+      ||,,\\V//\\V//, _|___|------|___|_ ,\\V//\\V//,,||
+      |--------------|____/--------\____|--------------|
+      /- _  -  _   - _ -  _ - - _ - _ _ - _  _-  - _ - _ \.
+     /_jgs________________________________________________\.
+    DOC
 
-puts <<-DOC
-WELCOME TO THE PRIORITIES GEM!
-
-I'm here to make your home search a little bit easier by helping you a find a great city to live in based on your PRIORITIES.
-
-I'll be asking you simple questions, and with the answers you give me, I'll comb through THOUSANDS of cities to come up with a small list that you might just find to be perfect.
-
-Let's get started...
-DOC
-    state = City.pick_state
-    City.check_population(state)
-    results_check(state)
+    puts <<-DOC.gsub /^\s*/,''
+    WELCOME TO THE PRIORITIES GEM!
+    ...
+    I'm here to make your home search a little bit easier by helping you a find a great city to live in based on your PRIORITIES.
+    ...
+    I'll be asking you simple questions, and with the answers you give me, I'll comb through hundreds of cities to come up with a small list that you might just find to be perfect.
+    ...
+    Let's get started...
+    DOC
+        state = City.pick_state
+        City.check_population(state)
+        results_check(state)
 
   end
 
@@ -179,35 +179,4 @@ DOC
       end
     end
   end
-
-
-
-
-
-  #def display_results_short(cities_hash)
-  #  cities_hash.each do |city, attribute|
-  #    puts city.red
-  #    attribute.each do |key, value|
-  #      if key == "diversity_percent"
-  #        puts "% Racial Diversity: #{value}".magenta
-  #      elsif key == "population"
-  #        puts "Population: #{value}".magenta
-  #      elsif key == "avg_home_price"
-  #        puts "Avg. Home Price: #{value}".magenta
-  #      elsif key == "college_grad_percent"
-  #        puts "% of College Graduates: #{value}".magenta
-  #      elsif key == "median_income"
-  #        puts "Avg. Median Income: #{value}".magenta
-  #      elsif key == "majority_vote"
-  #        puts "Majority Voting Party: #{value}".magenta
-  #      elsif key == "crimes_per_100k"
-  #        puts "Crimes per 100K people: #{value}".magenta
-  #      else
-  #        puts "#{key}: #{value}".magenta
-  #      end
-  #    end
-  #  end
-  #end
-
-
 end
