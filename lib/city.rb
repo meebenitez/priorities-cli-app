@@ -300,24 +300,6 @@ def self.create_state_short(state_name)
   short_name
 end
 
-  def self.create_display_hash #generate hash that's pushed to CLI display results
-    display_hash = Hash.new do |hash, key|
-      hash[key] = {}
-    end
-    @@all.each do |city|
-      if city.power_switch == "on"
-        main_key = "#{city.name}, #{city.state_short}"
-        city.instance_variables.each do |var|
-          unless var.to_s.delete("@") == "state_short" || var.to_s.delete("@") == "state_long" || var.to_s.delete("@") == "name" || var.to_s.delete("@") == "power_switch"
-            sub_key = var.to_s.delete("@")
-            display_hash[main_key][sub_key] = city.instance_variable_get(var)
-          end
-        end
-      end
-    end
-    display_hash
-  end
-
   def self.fake_delay
     puts "............."
     sleep(0.5)

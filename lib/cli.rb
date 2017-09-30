@@ -150,13 +150,13 @@ DOC
     else
       if @@counter < 1
         puts "LOL, well that was too easy.  We only found #{City.on_count} #{city_text}."
-        display_results_short(City.create_display_hash)
+        display_results_short
         City.destroy_turned_off
         puts " "
         puts "HAPPY HOUSE HUNTING!".green
       else
         puts "Congratulations!  Based on the answers you gave me, I've found #{City.on_count} #{city_text} that might be excellent for you!".blue
-        display_results_short(City.create_display_hash)
+        display_results_short
         City.destroy_turned_off
         puts " "
         puts "HAPPY HOUSE HUNTING!".green
@@ -164,30 +164,50 @@ DOC
     end
   end
 
-  def display_results_short(cities_hash)
-    cities_hash.each do |city, attribute|
-      puts city.red
-      attribute.each do |key, value|
-        if key == "diversity_percent"
-          puts "% Racial Diversity: #{value}".magenta
-        elsif key == "population"
-          puts "Population: #{value}".magenta
-        elsif key == "avg_home_price"
-          puts "Avg. Home Price: #{value}".magenta
-        elsif key == "college_grad_percent"
-          puts "% of College Graduates: #{value}".magenta
-        elsif key == "median_income"
-          puts "Avg. Median Income: #{value}".magenta
-        elsif key == "majority_vote"
-          puts "Majority Voting Party: #{value}".magenta
-        elsif key == "crimes_per_100k"
-          puts "Crimes per 100K people: #{value}".magenta
-        else
-          puts "#{key}: #{value}".magenta
-        end
+
+  def display_results_short
+    City.all.each do |city|
+      if city.power_switch == "on"
+        puts "#{city.name}".red
+        puts "Population: #{city.population}".magenta if city.population
+        puts "Avg. Home Price: #{city.avg_home_price}".magenta if city.avg_home_price
+        puts "Avg. Median Income: #{city.median_income}".magenta if city.median_income
+        puts "Crimes per 100K people: #{city.crimes_per_100k}".magenta if city.crimes_per_100k
+        puts "% of College Graduates: #{city.college_grad_percent}".magenta if city.college_grad_percent
+        puts "% Racial Diversity: #{city.diversity_percent}".magenta if city.diversity_percent
+        puts "Majority Voting Party: #{city.majority_vote}".magenta if city.majority_vote
       end
     end
   end
+
+
+
+
+
+  #def display_results_short(cities_hash)
+  #  cities_hash.each do |city, attribute|
+  #    puts city.red
+  #    attribute.each do |key, value|
+  #      if key == "diversity_percent"
+  #        puts "% Racial Diversity: #{value}".magenta
+  #      elsif key == "population"
+  #        puts "Population: #{value}".magenta
+  #      elsif key == "avg_home_price"
+  #        puts "Avg. Home Price: #{value}".magenta
+  #      elsif key == "college_grad_percent"
+  #        puts "% of College Graduates: #{value}".magenta
+  #      elsif key == "median_income"
+  #        puts "Avg. Median Income: #{value}".magenta
+  #      elsif key == "majority_vote"
+  #        puts "Majority Voting Party: #{value}".magenta
+  #      elsif key == "crimes_per_100k"
+  #        puts "Crimes per 100K people: #{value}".magenta
+  #      else
+  #        puts "#{key}: #{value}".magenta
+  #      end
+  #    end
+  #  end
+  #end
 
 
 end
