@@ -80,7 +80,7 @@ class Scraper
       begin
         sleep(1.5) #polite 1 second wait before the next traffic hit
         doc = Nokogiri::HTML(open(index_url))
-        median_income = doc.css("section#median-income div.hgraph").css("td")[1].textw
+        median_income = doc.css("section#median-income div.hgraph").css("td")[1].text
       end
     rescue OpenURI::HTTPError => e
       if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
