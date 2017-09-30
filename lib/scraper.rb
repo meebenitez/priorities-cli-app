@@ -80,7 +80,7 @@ class Scraper
       begin
         sleep(1.5) #polite 1 second wait before the next traffic hit
         doc = Nokogiri::HTML(open(index_url))
-        median_income = doc.css("section#median-income div.hgraph").css("td")[1].text
+        median_income = doc.css("div#splash-stats div.stat").css("div.stat-value")[3].text
       end
     rescue OpenURI::HTTPError => e
       if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
@@ -92,7 +92,7 @@ class Scraper
 
     def self.grab_majority_voters(index_url)
       begin
-        sleep(1.5) #polite 1 second wait before the next traffic hit
+        sleep(1.5) #polite 1.5 second wait before the next traffic hit
         doc = Nokogiri::HTML(open("#{index_url}/voting"))
         republican = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[5]
         democrat = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[2]

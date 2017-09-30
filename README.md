@@ -8,14 +8,13 @@ Prospective home buyer? Looking to move to a new city? This gem will help you na
 
 https://datausa.io  
 http://worldpopulationreview.com  
-http://www.city-data.com  
 http://www.geostat.org  
 http://www.areavibes.com
 
 Check out the video walkthrough here: https://www.youtube.com/watch?v=LiApPW6Xh_I
 
 NOTES:  
-This gem's reliance on scraping is FOR PROTOTYPE PURPOSES ONLY.  In its current state, checking a priority against 60+ cities can take over a minute because I've included crawl delays between hits to be a more polite web scraper.  Depending on the site being sourced from, some checks take longer than others.  Be prepared to get up and stretch in between searches.  This gem can be easily modified and expanded to utilize more efficient data sourcing methods.
+This gem's reliance on scraping is FOR PROTOTYPE PURPOSES ONLY.  In its current state, checking a priority against 60+ cities can take over a minute because I've included crawl delays between hits to be a more polite web scraper.  Depending on the site being sourced from, some checks take longer than others.  Be prepared to get up and stretch in between searches.  This gem can be easily modified and expanded and is intended to utilize more efficient data sourcing methods.
 
 ## Installation
 
