@@ -209,7 +209,7 @@ def self.check_education #gets cities where the population of college grads is g
     unless city.power_switch == "off"
       rating = Scraper.grab_education(Scraper.create_geostat_url(city.name, city.state_short))
       if rating#we have to test nil here instead of Scraper so that we can turn off nil cities
-        rating.tr('%', '').to_f > 21 ? city.college_grad_percent = rating : turn_city_off(city)
+        convert_percent(rating) > 21 ? city.college_grad_percent = rating : turn_city_off(city)
       else
         turn_city_off(city)
       end
@@ -309,6 +309,15 @@ end
     value.gsub(/[$,mM]/, '').to_i
   end
 
+  def self.comma_numbers(number, delimiter = ',')#Helps format price
+    number.to_s.reverse.gsub(%r{([0-9]{3}(?=([0-9])))}, "\\1#{delimiter}").reverse
+  end
+
+  def self.convert_percent(value)
+    value.tr('%', '').to_f
+  end
+
+
 #--------------------------INPUT VALIDATORS---------------------------
 
   def self.state_input_validator
@@ -349,9 +358,6 @@ end
     yes_no_input_validator == "yes" ? input : input_price_validator
   end
 
-  def self.comma_numbers(number, delimiter = ',')#Helps format price
-  number.to_s.reverse.gsub(%r{([0-9]{3}(?=([0-9])))}, "\\1#{delimiter}").reverse
-end
 
 
 ##########################REGION CODE############################
