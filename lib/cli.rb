@@ -5,7 +5,7 @@ class Priorities::CLI
 
 attr_accessor :last_priority, :priorities
 
-PRIORITIES = ["Home Affordability", "Median Income", "Crime Stats", "Well Educated", "Racial Diversity", "Politics"]
+PRIORITIES = ["Home Affordability", "Median Income", "Safety Stats", "% College Grads", "Racial Diversity", "Political Compatibility"]
 
 @@priority_pick_order = []
 
@@ -89,21 +89,19 @@ DOC
   end
 
   def run_priority_check(priority)
-    if priority == "Weather"
-      City.check_weather
-    elsif priority == "Home Affordability"
+    if priority == "Home Affordability"
       City.check_affordability
     elsif priority == "Median Income"
       3.times { City.fake_delay }
       puts "Finding cities where the Median Income is higher than the US avg of $55,775."
       2.times { City.fake_delay }
       City.check_median_income
-    elsif priority == "Well Educated"
+    elsif priority == "% College Grads"
       3.times { City.fake_delay }
       puts "Finding cities where the percentage of college grads among residents is higher than the US avg of 21%"
       2.times { City.fake_delay }
       City.check_education
-    elsif priority == "Crime Stats"
+    elsif priority == "Safety Stats"
       3.times { City.fake_delay }
       puts "Finding cities where the total crimes per 100k people is less than the US average of 2,860"
       2.times { City.fake_delay }

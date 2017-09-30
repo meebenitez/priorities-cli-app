@@ -66,8 +66,8 @@ class City
                           "Medium Big City" => {greater_than: 99999, less_than: 150000, description: "pop. 100K to 150K", wait_message: "With a population between 100,000 and 150,000 residents..."},
                           "Medium City" => {greater_than: 49999, less_than: 100000, description: "pop. 50K to 100K", wait_message: "With a population between 50,000 and 100,000 residents..."},
                           "Medium Small City" => {greater_than: 24999, less_than: 50000, description: "pop. 25K to 50K", wait_message: "With a population between 25,000 and 50,000 residents..."},
-                          "Small City" => {greater_than: 9999, less_than: 25000, description: "pop. 10K to 25K", wait_message: "With a population between 10,000 and 25,000 residents..."},
-                          "Small Town" => {greater_than: 999, less_than: 10000, description: "pop. 1K to 10K", wait_message: "With a population between 1,000 and 10,000 residents..."},
+                          "Small City" => {greater_than: 4999, less_than: 25000, description: "pop. 5K to 25K", wait_message: "With a population between 5,000 and 25,000 residents..."},
+                          "Small Town" => {greater_than: 999, less_than: 5000, description: "pop. 1K to 5K", wait_message: "With a population between 1,000 and 5,000 residents..."},
                           "Tiny" => {greater_than: 0, less_than: 1000, description: "pop. < 1K", wait_message: "With a population less than 1,000 residents..."}
                           }
 
@@ -171,7 +171,7 @@ def self.check_median_income
     unless city.power_switch == "off"
       median_income = Scraper.grab_median_income(Scraper.create_city_data_url(city.name, city.state_long))
       if median_income
-        median_income.gsub(/[$,mM]/, '').to_i < 55775 ? city.median_income = median_income : turn_city_off(city)
+        median_income.gsub(/[$,mM]/, '').to_i > 55775 ? city.median_income = median_income : turn_city_off(city)
       else
         turn_city_off(city)
       end

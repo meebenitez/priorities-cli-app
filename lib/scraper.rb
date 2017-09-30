@@ -35,6 +35,7 @@ class Scraper
 
     def self.grab_home_prices(index_url)
       begin
+        sleep(1) #polite 1 second wait before the next traffic hit
         doc = Nokogiri::HTML(open(index_url))
         price = doc.css("section#median-income div.hgraph")[1].css("td")[1].text
       end
@@ -49,6 +50,7 @@ class Scraper
 
     def self.grab_diversity(index_url)
       begin
+        sleep(1) #polite 1 second wait before the next traffic hit
         doc = Nokogiri::HTML(open(index_url))
         white_population = doc.css("section.demographics.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value.stat-small span.stat-right span.stat-subtitle span.stat-span").first.text
       end
@@ -62,6 +64,7 @@ class Scraper
 
     def self.grab_education(index_url)
       begin
+        sleep(1) #polite 1 second wait before the next traffic hit
         doc = Nokogiri::HTML(open(index_url))
         percent = doc.css("section#education-info").css("ul").css("li")[1].text.sub("Bachelor's degree or higher: ", "")
       end
@@ -75,8 +78,9 @@ class Scraper
 
     def self.grab_median_income(index_url)
       begin
+        sleep(1) #polite 1 second wait before the next traffic hit
         doc = Nokogiri::HTML(open(index_url))
-        median_income = doc.css("section#median-income div.hgraph").css("td")[1].text
+        median_income = doc.css("section#median-income div.hgraph").css("td")[1].textw
       end
     rescue OpenURI::HTTPError => e
       if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
@@ -88,6 +92,7 @@ class Scraper
 
     def self.grab_majority_voters(index_url)
       begin
+        sleep(1) #polite 1 second wait before the next traffic hit
         doc = Nokogiri::HTML(open(index_url))
         republican = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[5]
         democrat = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[2]
@@ -103,6 +108,7 @@ class Scraper
     end
 
     def self.grab_crime_stats(index_url)
+      sleep(1) #polite 1 second wait before the next traffic hit
       begin
         doc = Nokogiri::HTML(open(index_url))
         crime_stat = doc.css("table.av-default.crime-cmp").css("tr.summary.major").css("td")[3].text
