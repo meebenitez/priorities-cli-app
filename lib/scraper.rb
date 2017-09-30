@@ -37,7 +37,7 @@ class Scraper
       begin
         sleep(1.5) #polite 1 second wait before the next traffic hit
         doc = Nokogiri::HTML(open(index_url))
-        price = doc.css("section#median-income div.hgraph")[1].css("td")[1].text
+        price = doc.css("div.responsive.span6 div.dashboard-stat.red").css("div.number").text
       end
       rescue OpenURI::HTTPError => e
         if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
@@ -93,7 +93,7 @@ class Scraper
     def self.grab_majority_voters(index_url)
       begin
         sleep(1.5) #polite 1 second wait before the next traffic hit
-        doc = Nokogiri::HTML(open(index_url))
+        doc = Nokogiri::HTML(open("#{index_url}/voting"))
         republican = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[5]
         democrat = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[2]
         independent = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[8]
@@ -159,7 +159,7 @@ class Scraper
   def self.create_geostat_url(city_name, state_short)
     city_name = city_name.sub(/\s[a-z].+/, '')
     city_name = check_and_convert_name_dash(check_and_convert_period_name(city_name))
-    data_url = "http://www.geostat.org/data/#{city_name}-#{state_short}/voting"
+    data_url = "http://www.geostat.org/data/#{city_name}-#{state_short}"
     data_url
   end
 

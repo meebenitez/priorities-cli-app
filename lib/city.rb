@@ -153,9 +153,8 @@ class City
     3.times {fake_delay}
     @@all.each do |city|
       unless city.power_switch == "off"
-        home_price = Scraper.grab_home_prices(Scraper.create_city_data_url(city.name, city.state_long))
+        home_price = Scraper.grab_home_prices(Scraper.create_geostat_url(city.name, city.state_short))
         if home_price
-          home_price = home_price.sub(/over\s/, '')
           home_price.gsub(/[$,mM]/, '').to_i < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
         else
           turn_city_off(city)
