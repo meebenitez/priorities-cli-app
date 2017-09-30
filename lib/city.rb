@@ -154,8 +154,8 @@ class City
     @@all.each do |city|
       unless city.power_switch == "off"
         home_price = Scraper.grab_home_prices(Scraper.create_geostat_url(city.name, city.state_short))
-        if home_price
-          home_price.gsub(/[$,mM]/, '').to_i < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
+        if home_price#we have to test nil here instead of Scraper so that we can turn off nil cities
+          convert_monetary(home_price) < user_budget ? city.avg_home_price = home_price : turn_city_off(city)
         else
           turn_city_off(city)
         end
@@ -169,8 +169,8 @@ def self.check_median_income
   @@all.each do |city|
     unless city.power_switch == "off"
       median_income = Scraper.grab_median_income(Scraper.create_datausa_url(city.name, city.state_short))
-      if median_income
-        median_income.gsub(/[$,mM]/, '').to_i > 55775 ? city.median_income = median_income : turn_city_off(city)
+      if median_income #we have to test nil here instead of Scraper so that we can turn off nil cities
+        convert_monetary(median_income) > 55775 ? city.median_income = median_income : turn_city_off(city)
       else
         turn_city_off(city)
       end
@@ -179,13 +179,15 @@ def self.check_median_income
 
 end
 
+
+
 #-------------DIVERSITY-----------------------
   def self.check_diversity
     @@all.each do |city|
       total_population = city.population.tr(',', '').to_i
       unless city.power_switch == "off"
         white_population = Scraper.grab_diversity(Scraper.create_datausa_url(city.name, city.state_short))
-        if white_population
+        if white_population#we have to test nil her instead of Scraper so that we can turn off nil cities
           white_population = white_population.tr(',', '').to_i
           diversity_percent = diversity_percentage(total_population, white_population)
           diversity_percent > 37 ? city.diversity_percent = diversity_percent : turn_city_off(city)
@@ -206,7 +208,7 @@ def self.check_education #gets cities where the population of college grads is g
   @@all.each do |city|
     unless city.power_switch == "off"
       rating = Scraper.grab_education(Scraper.create_geostat_url(city.name, city.state_short))
-      if rating
+      if rating#we have to test nil here instead of Scraper so that we can turn off nil cities
         rating.tr('%', '').to_f > 21 ? city.college_grad_percent = rating : turn_city_off(city)
       else
         turn_city_off(city)
@@ -221,7 +223,7 @@ end
     @@all.each do |city|
       unless city.power_switch == "off"
         crimes = Scraper.grab_crime_stats(Scraper.create_areavibes_url(city.name, city.state_short))
-        if crimes
+        if crimes#we have to test nil here instead of Scraper so that we can turn off nil cities
           crimes.tr(',','').to_i < 2860 ? city.crimes_per_100k = crimes : turn_city_off(city)
         else
           turn_city_off(city)
@@ -242,7 +244,7 @@ end
       unless city.power_switch == "off"
         voter_hash = {}
         voter_hash = Scraper.grab_majority_voters(Scraper.create_geostat_url(city.name, city.state_short))
-        if voter_hash
+        if voter_hash#we have to test nil here instead of Scraper so that we can turn off nil cities
           majority_voter = voter_hash.key(voter_hash.values.max)
           majority_voter == input ? city.majority_vote = majority_voter : turn_city_off(city)
         else
@@ -319,6 +321,10 @@ end
   def self.fake_delay
     puts "............."
     sleep(0.5)
+  end
+
+  def self.convert_monetary(value)
+    value.gsub(/[$,mM]/, '').to_i
   end
 
 #--------------------------INPUT VALIDATORS---------------------------

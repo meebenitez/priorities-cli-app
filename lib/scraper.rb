@@ -10,17 +10,17 @@ class Scraper
       cities = {}
       url_hash.each do |state, state_url|
         counter = 0
-        doc = Nokogiri::HTML(open(state_url))
+        @doc = Nokogiri::HTML(open(state_url))
         if state == "California"
-          data = doc.css("div.section-content").css("tbody[data-reactid='191']").css("td")
+          data = @doc.css("div.section-content").css("tbody[data-reactid='191']").css("td")
         elsif state == "Georgia" || state == "Kentucky" || state == "Montana" || state == "Vermont" || state == "Alaska"
-          data = doc.css("div.section-content").css("tbody[data-reactid='167']").css("td")
+          data = @doc.css("div.section-content").css("tbody[data-reactid='167']").css("td")
         elsif state == "Idaho" || state == "Indiana" || state == "Tennessee" || state == "Virginia" || state == "Wisconsin"
-          data = doc.css("div.section-content").css("tbody[data-reactid='175']").css("td")
+          data = @doc.css("div.section-content").css("tbody[data-reactid='175']").css("td")
         elsif state == "Hawaii"
-          data = doc.css("div.section-content").css("tbody[data-reactid='103']").css("td")
+          data = @doc.css("div.section-content").css("tbody[data-reactid='103']").css("td")
         else
-          data = doc.css("div.section-content").css("tbody[data-reactid='183']").css("td")
+          data = @doc.css("div.section-content").css("tbody[data-reactid='183']").css("td")
         end
         total_count = data.count - 1
         until counter > total_count
@@ -36,8 +36,8 @@ class Scraper
     def self.grab_home_prices(index_url)
       begin
         sleep(1.5) #polite 1 second wait before the next traffic hit
-        doc = Nokogiri::HTML(open(index_url))
-        price = doc.css("div.responsive.span6 div.dashboard-stat.red").css("div.number").text
+        @doc = Nokogiri::HTML(open(index_url))
+        price = @doc.css("div.responsive.span6 div.dashboard-stat.red").css("div.number").text
       end
       rescue OpenURI::HTTPError => e
         if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
@@ -51,8 +51,8 @@ class Scraper
     def self.grab_diversity(index_url)
       begin
         sleep(1.5) #polite 1 second wait before the next traffic hit
-        doc = Nokogiri::HTML(open(index_url))
-        white_population = doc.css("section.demographics.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value.stat-small span.stat-right span.stat-subtitle span.stat-span").first.text
+        @doc = Nokogiri::HTML(open(index_url))
+        white_population = @doc.css("section.demographics.profile-section article.topic div.content aside div.topic-stats div.stat div.stat-value.stat-small span.stat-right span.stat-subtitle span.stat-span").first.text
       end
     rescue OpenURI::HTTPError => e
       if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
@@ -65,8 +65,8 @@ class Scraper
     def self.grab_education(index_url)
       begin
         sleep(1.5) #polite 1 second wait before the next traffic hit
-        doc = Nokogiri::HTML(open(index_url))
-        percent = doc.css("div.responsive.span6 div.dashboard-stat.green").css("div.details").css("div.number")[1].text
+        @doc = Nokogiri::HTML(open(index_url))
+        percent = @doc.css("div.responsive.span6 div.dashboard-stat.green").css("div.details").css("div.number")[1].text
       end
     rescue OpenURI::HTTPError => e
       if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
@@ -79,8 +79,8 @@ class Scraper
     def self.grab_median_income(index_url)
       begin
         sleep(1.5) #polite 1 second wait before the next traffic hit
-        doc = Nokogiri::HTML(open(index_url))
-        median_income = doc.css("div#splash-stats div.stat").css("div.stat-value")[3].text
+        @doc = Nokogiri::HTML(open(index_url))
+        median_income = @doc.css("div#splash-stats div.stat").css("div.stat-value")[3].text
       end
     rescue OpenURI::HTTPError => e
       if e.message == '404 Not Found' || e.message == "404 NOT FOUND"
@@ -93,10 +93,10 @@ class Scraper
     def self.grab_majority_voters(index_url)
       begin
         sleep(1.5) #polite 1.5 second wait before the next traffic hit
-        doc = Nokogiri::HTML(open("#{index_url}/voting"))
-        republican = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[5]
-        democrat = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[2]
-        independent = doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[8]
+        @doc = Nokogiri::HTML(open("#{index_url}/voting"))
+        republican = @doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[5]
+        democrat = @doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[2]
+        independent = @doc.css("div.span6").css("div")[6].css("div")[3].css("tr").css("td")[8]
         voter_hash = {"Republican" => republican.text.tr('%', '').to_f, "Democrat" => democrat.text.tr('%', '').to_f, "Independent" => independent.text.tr('%', '').to_f}
       end
       rescue OpenURI::HTTPError => e
@@ -110,8 +110,8 @@ class Scraper
     def self.grab_crime_stats(index_url)
       sleep(1.5) #polite 1 second wait before the next traffic hit
       begin
-        doc = Nokogiri::HTML(open(index_url))
-        crime_stat = doc.css("table.av-default.crime-cmp").css("tr.summary.major").css("td")[3].text
+        @doc = Nokogiri::HTML(open(index_url))
+        crime_stat = @doc.css("table.av-default.crime-cmp").css("tr.summary.major").css("td")[3].text
         if crime_stat
           crime_stat = crime_stat.sub(' (estimate)', '')
         end
@@ -194,6 +194,8 @@ class Scraper
     end
     name
   end
+
+
 
 
 ####################REGION CODE############################
