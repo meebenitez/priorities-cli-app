@@ -55,11 +55,11 @@ PRIORITIES = ["Home Affordability", "Median Income", "Safety Stats", "% College 
 
     puts <<-DOC.gsub /^\s*/,''
     WELCOME TO THE PRIORITIES GEM!
-    ...
+
     I'm here to make your home search a little bit easier by helping you a find a great city to live in based on your PRIORITIES.
-    ...
+
     I'll be asking you simple questions, and with the answers you give me, I'll comb through hundreds of cities to come up with a small list that you might just find to be perfect.
-    ...
+      
     Let's get started...
     DOC
         state = City.pick_state
