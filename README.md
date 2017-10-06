@@ -14,6 +14,14 @@ http://www.areavibes.com
 Check out the video walkthrough here: https://www.youtube.com/watch?v=LiApPW6Xh_I
 
 NOTES:  
+
+IF YOU WANT TO FORK AND TEST THIS GEM, PLEASE USE THE FOLLOWING TEST CASES:  
+
+  1.Type in "Washington" when prompted
+  2.Then select option 4 for a "Medium Small City"
+
+  This will give you a reasonable number of cities to scrape through.  
+
 This gem's reliance on scraping is FOR PROTOTYPE PURPOSES ONLY.  In its current state, checking a priority against 60+ cities can take over a minute because I've included crawl delays between hits to be a more polite web scraper.  Depending on the site being sourced from, some checks take longer than others.  Be prepared to get up and stretch in between searches.  This gem can be easily modified and expanded and is intended to utilize more efficient data sourcing methods.
 
 ## Installation
