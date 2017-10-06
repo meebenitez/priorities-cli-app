@@ -17,7 +17,7 @@ NOTES:
 
 IF YOU WANT TO FORK AND TEST THIS GEM, PLEASE USE THE FOLLOWING TEST CASES:  
 
-  1.Type in "Washington" when prompted
+  1.Type in "Washington" when prompted  
   2.Then select option 4 for a "Medium Small City"
 
   This will give you a reasonable number of cities to scrape through.  
