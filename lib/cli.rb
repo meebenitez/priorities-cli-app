@@ -62,16 +62,16 @@ PRIORITIES = ["Home Affordability", "Median Income", "Safety Stats", "% College 
       
     Let's get started...
     DOC
-        state_hash = City.pick_state
-        City.check_population(state_hash)
-        results_check(state_hash)
+        City.pick_state
+        City.check_population
+        results_check
 
   end
 
 
 #######################PRIORITY LOGIC##############################
 
-  def pick_priority(state)
+  def pick_priority
     if PRIORITIES.count > 1
     puts "(Enter a number between 1 and #{PRIORITIES.count})".green
     PRIORITIES.each_with_index { |priority, index| puts "#{index + 1}. #{priority}" }
@@ -81,7 +81,7 @@ PRIORITIES = ["Home Affordability", "Median Income", "Safety Stats", "% College 
     run_priority_check(priority)
     PRIORITIES.delete(priority)
     @@priority_pick_order << priority
-    results_check(state)
+    results_check
     else
       puts "Looks like we've run out of priorities to choose from before we could get our list down to 5.  I guess that means you have lots of cities to look into.  Hurray for options!  Here's your list of cities.  Happy house hunting!"
       display_results_short(City.create_display_hash)
@@ -122,7 +122,7 @@ PRIORITIES = ["Home Affordability", "Median Income", "Safety Stats", "% College 
 
 #########################RESULTS AND OUTPUT#################################
 
-  def results_check(state)
+  def results_check
     City.on_count > 1 ? city_text = "cities" : city_text = "city"
     if City.on_count > 5
          City.destroy_turned_off
@@ -131,21 +131,21 @@ PRIORITIES = ["Home Affordability", "Median Income", "Safety Stats", "% College 
         puts "Below is a list of things that a home buyer might consider when choosing a city to move to."
         puts "Give it a quick read, and then pick the priority that would be MOST important to you.".green
         @@counter += 1
-        pick_priority(state)
+        pick_priority
       else
         puts "I found #{City.on_count} #{city_text} that match that criteria.  Let's pick another priority!".green
-        pick_priority(state)
+        pick_priority
       end
     elsif City.on_count == 0
       if @@counter < 1
-        puts "Wow.  Looks like we couldn't find any cities that size in #{state.keys[0]}.  Let's try again."
-        City.check_population(state)
-        results_check(state)
+        puts "Wow.  Looks like we couldn't find any cities that size in #{City.current_state}.  Let's try again."
+        City.check_population
+        results_check
       else
         puts "Looks like none of the cities in your current list fit that criteria."
         puts "Let's choose a different priority."
         City.reset_last
-        pick_priority(state)
+        pick_priority
       end
     else
       if @@counter < 1

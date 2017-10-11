@@ -6,6 +6,9 @@ class City
   attr_accessor :name, :avg_home_price, :diversity_percent, :median_income, :population, :crimes_per_100k, :college_grad_percent, :majority_vote, :power_switch, :state_short, :state_long, :bio
 
   @@all = []
+  
+  @@state = nil
+  @@state_url_hash = {}
 
   @@turned_off = []
 
@@ -78,10 +81,9 @@ class City
   def self.pick_state
     puts "First, tell me which state would you like to focus your search in?".green
     input = state_input_validator
-    Scraper.create_state_urls(input)#is capable of returning a hash of urls to accommodate future "pick regions" feature
-    #returns hash ---> { state => url }
+    @@state = input
+    @@state_url_hash = Scraper.create_state_urls(@@state)#is capable of returning a hash of urls to accommodate future "pick regions" feature
   end
-
 
   def self.pick_population
     puts "Now tell me what size city you want to live in...".green
@@ -94,11 +96,11 @@ class City
   end
 
 
-  def self.check_population(state_hash) #ask the user to pick a population, and then narrow down the results
+  def self.check_population #ask the user to pick a population, and then narrow down the results
     input = self.pick_population
     cities_hash = {}
-    cities_hash = Scraper.grab_cities(state_hash)#grab urls to iterate through based on user's "state" or "region"(future feature) pick
-    population_search_message(input, state_hash)
+    cities_hash = Scraper.grab_cities(@@state_url_hash)#grab urls to iterate through based on user's "state" or "region"(future feature) pick
+    population_search_message(input)
     cities_hash.each do |city| #iterate through the grab_cities hash to generate initial data based on the user's Region pick and population choice
       population_count = cities_hash[city[0]][:population].tr(',', '').to_i
       if input == "Big City"
@@ -130,11 +132,11 @@ class City
     @@all << city_obj
   end
 
-  def self.population_search_message(input, state)
+  def self.population_search_message(input)
     POPULATION_CHOICES.each do |choice, index|
       if input == choice
         3.times { fake_delay }
-        puts "Finding cities in #{state.keys[0]}..."
+        puts "Finding cities in #{@@state}..."
         3.times { fake_delay }
         puts POPULATION_CHOICES[choice][:wait_message]
         3.times { fake_delay }
@@ -273,6 +275,9 @@ def self.all
   @@all
 end
 
+def self.current_state
+@@state
+end
 
 def self.on_count #grab count of all cities with power_switch turned "on"
   count = 0
