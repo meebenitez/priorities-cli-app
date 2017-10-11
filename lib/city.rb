@@ -78,7 +78,8 @@ class City
   def self.pick_state
     puts "First, tell me which state would you like to focus your search in?".green
     input = state_input_validator
-    Scraper.create_state_urls(input)
+    Scraper.create_state_urls(input)#is capable of returning a hash of urls to accommodate future "pick regions" feature
+    #returns hash ---> { state => url }
   end
 
 
@@ -93,11 +94,11 @@ class City
   end
 
 
-  def self.check_population(state) #ask the user to pick a population, and then narrow down the results
+  def self.check_population(state_hash) #ask the user to pick a population, and then narrow down the results
     input = self.pick_population
     cities_hash = {}
-    cities_hash = Scraper.grab_cities(state)#grab urls to iterate through based on user's "region" pick
-    population_search_message(input, state)
+    cities_hash = Scraper.grab_cities(state_hash)#grab urls to iterate through based on user's "state" or "region"(future feature) pick
+    population_search_message(input, state_hash)
     cities_hash.each do |city| #iterate through the grab_cities hash to generate initial data based on the user's Region pick and population choice
       population_count = cities_hash[city[0]][:population].tr(',', '').to_i
       if input == "Big City"
@@ -407,6 +408,8 @@ end
 #  end
 #  region_array
 #end
+
+
 
 #################################################################
 

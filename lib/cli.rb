@@ -62,9 +62,9 @@ PRIORITIES = ["Home Affordability", "Median Income", "Safety Stats", "% College 
       
     Let's get started...
     DOC
-        state = City.pick_state
-        City.check_population(state)
-        results_check(state)
+        state_hash = City.pick_state
+        City.check_population(state_hash)
+        results_check(state_hash)
 
   end
 
@@ -125,7 +125,7 @@ PRIORITIES = ["Home Affordability", "Median Income", "Safety Stats", "% College 
   def results_check(state)
     City.on_count > 1 ? city_text = "cities" : city_text = "city"
     if City.on_count > 5
-      City.destroy_turned_off
+         City.destroy_turned_off
       if @@counter < 1
         puts "Alright! I've gathered a list of #{City.on_count} #{city_text} for us to start with. Now, let's start picking priorities!"
         puts "Below is a list of things that a home buyer might consider when choosing a city to move to."
@@ -151,13 +151,11 @@ PRIORITIES = ["Home Affordability", "Median Income", "Safety Stats", "% College 
       if @@counter < 1
         puts "LOL, well that was too easy.  We only found #{City.on_count} #{city_text}."
         display_results_short
-        City.destroy_turned_off
         puts " "
         puts "HAPPY HOUSE HUNTING!".green
       else
         puts "Congratulations!  Based on the answers you gave me, I've found #{City.on_count} #{city_text} that might be excellent for you!".blue
         display_results_short
-        City.destroy_turned_off
         puts " "
         puts "HAPPY HOUSE HUNTING!".green
       end
